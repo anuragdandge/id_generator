@@ -17,14 +17,12 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
     myColor = Theme.of(context).primaryColor;
-    return Container(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 0, child: _buildBottom()),
-          ],
-        ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned(top: 80, child: _buildTop()),
+          Positioned(bottom: 0, child: _buildBottom()),
+        ],
       ),
     );
   }
@@ -126,8 +124,9 @@ class _LoginState extends State<Login> {
       maxLength: 10,
       keyboardType: tit,
       decoration: InputDecoration(
-          suffixIcon:
-              isPassword ? Icon(Icons.remove_red_eye) : Icon(Icons.done),
+          suffixIcon: isPassword
+              ? const Icon(Icons.remove_red_eye)
+              : const Icon(Icons.done),
           border: const OutlineInputBorder(),
           label: Text(label)),
       obscureText: isPassword,
@@ -160,8 +159,6 @@ class _LoginState extends State<Login> {
         onPressed: () {
           debugPrint("Email ${phoneController.text}");
           debugPrint("Password ${passwordController.text}");
-          print("Email ${phoneController.text}");
-          print("Password ${passwordController.text}");
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,

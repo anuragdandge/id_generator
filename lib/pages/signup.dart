@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -30,23 +27,20 @@ class _SignupState extends State<Signup> {
   bool rememberUser = false;
   String? _selectedOption;
   String? _selectedBloodGroup = bloodGroups.first;
-  File? _selectedImage;
   @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
     myColor = Theme.of(context).primaryColor;
-    return Container(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _buildTop(),
-              ),
-              _buildBottom(),
-            ],
-          ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildTop(),
+            ),
+            _buildBottom(),
+          ],
         ),
       ),
     );
@@ -198,61 +192,8 @@ class _SignupState extends State<Signup> {
             Container(
               width: 100,
               height: 100,
-              child: IconButton(
-                splashColor: null,
-                icon: Icon(
-                  Icons.add_a_photo,
-                  size: 50,
-                  color: Colors.deepPurple,
-                ),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          child: AlertDialog(
-                            title: Text("Select Image "),
-                            actions: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextButton(
-                                      onPressed: _pickImageFromCamera,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.camera_alt),
-                                          SizedBox(width: 20),
-                                          Text("Camera ")
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextButton(
-                                      onPressed: _pickImageFromGallery,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.upload_file),
-                                          SizedBox(width: 20),
-                                          Text("Gallery ")
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                },
-              ),
               decoration: BoxDecoration(
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 10.0,
@@ -268,6 +209,57 @@ class _SignupState extends State<Signup> {
                   border: Border.all(
                       width: 1, color: Colors.grey, style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(10)),
+              child: IconButton(
+                splashColor: null,
+                icon: const Icon(
+                  Icons.add_a_photo,
+                  size: 50,
+                  color: Colors.deepPurple,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Select Image "),
+                          actions: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: _pickImageFromCamera,
+                                    child: const Row(
+                                      children: [
+                                        Icon(Icons.camera_alt),
+                                        SizedBox(width: 20),
+                                        Text("Camera ")
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: _pickImageFromGallery,
+                                    child: const Row(
+                                      children: [
+                                        Icon(Icons.upload_file),
+                                        SizedBox(width: 20),
+                                        Text("Gallery ")
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      });
+                },
+              ),
             ),
             const SizedBox(height: 10),
             _buildClassChoiceChip(),
@@ -395,17 +387,13 @@ class _SignupState extends State<Signup> {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-    });
+    setState(() {});
   }
 
   Future _pickImageFromCamera() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (returnedImage == null) return;
-    setState(() {
-      _selectedImage = File(returnedImage.path);
-    });
+    setState(() {});
   }
 }
