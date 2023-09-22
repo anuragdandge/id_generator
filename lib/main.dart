@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:id_generator/features/generate_qr_code.dart';
+import 'package:id_generator/pages/qr_scanner.dart';
 
 import 'package:id_generator/pages/signup.dart';
 
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Signup(),
+      home: const GenerateQR(),
     );
   }
 }
