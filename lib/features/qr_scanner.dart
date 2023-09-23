@@ -18,7 +18,10 @@ class _ScanQRState extends State<ScanQR> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Scan QR Code "),
+        title: Text(
+          "Scan QR Code ",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Signup extends StatefulWidget {
@@ -36,6 +37,7 @@ class _SignupState extends State<Signup> {
   String? _selectedDivision;
   String? _selectedBloodGroup = bloodGroups.first;
   File? _selectedImage;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +45,16 @@ class _SignupState extends State<Signup> {
     myColor = Theme.of(context).primaryColor;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildTop(),
-            ),
-            _buildBottom(),
-          ],
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _buildTop(),
+              ),
+              _buildBottom(),
+            ],
+          ),
         ),
       ),
     );
@@ -96,198 +100,243 @@ class _SignupState extends State<Signup> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Welcome ",
-              style: TextStyle(
-                  color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
-            ),
-            _buildGreyText("Signup with your Information"),
-            const SizedBox(
-              height: 40,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.name,
-              controller: fullNameController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text(" Full Name "),
-                  hintText: "Baburao Ganpatrao Aapte ",
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.datetime,
-              controller: dateOfBirth,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "01/01/2000",
-                  label: Text(" Date OF Birth  "),
-                  prefixIcon: Icon(
-                    Icons.date_range,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.datetime,
-              controller: academicYear,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "2024",
-                  label: Text(" Academic Year  "),
-                  prefixIcon: Icon(
-                    Icons.school_outlined,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.phone,
-              controller: phoneController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "9145369999",
-                  label: Text(" Phone Number "),
-                  prefixIcon: Icon(
-                    Icons.phone,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.phone,
-              controller: emergencyNumber,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "9145369999",
-                  label: Text(" Emergency Phone Number "),
-                  prefixIcon: Icon(
-                    Icons.contact_emergency,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.streetAddress,
-              controller: localAddress,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Karve Nagar ,2nd Floor ,  Flat no. 30 ",
-                  label: Text(" Local Address "),
-                  prefixIcon: Icon(
-                    Icons.location_city,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              controller: rollNumber,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "51112",
-                  label: Text("Roll Number "),
-                  prefixIcon: Icon(
-                    Icons.pin,
-                    color: Colors.deepPurple,
-                  )),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 10.0,
-                      spreadRadius: -5,
-                      offset: Offset(
-                        0,
-                        5,
-                      ),
-                    )
-                  ],
-                  color: Colors.deepPurple[50],
-                  shape: BoxShape.rectangle,
-                  border: Border.all(
-                      width: 1, color: Colors.grey, style: BorderStyle.solid),
-                  borderRadius: BorderRadius.circular(10)),
-              child: _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                    )
-                  : IconButton(
-                      splashColor: null,
-                      icon: const Icon(
-                        Icons.add_a_photo,
-                        size: 50,
-                        color: Colors.deepPurple,
-                      ),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Select Image "),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: _pickImageFromCamera,
-                                          child: const Row(
-                                            children: [
-                                              Icon(Icons.camera_alt),
-                                              SizedBox(width: 20),
-                                              Text("Camera ")
-                                            ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome ",
+                style: TextStyle(
+                    color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
+              ),
+              _buildGreyText("Signup with your Information"),
+              const SizedBox(
+                height: 40,
+              ),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                controller: fullNameController,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    label: Text(" Full Name "),
+                    hintText: "Baburao Ganpatrao Aapte ",
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.datetime,
+                controller: dateOfBirth,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "01/01/2000",
+                    label: Text(" Date OF Birth  "),
+                    prefixIcon: Icon(
+                      Icons.date_range,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.datetime,
+                controller: academicYear,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "2024",
+                    label: Text(" Academic Year  "),
+                    prefixIcon: Icon(
+                      Icons.school_outlined,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.phone,
+                controller: phoneController,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "9145369999",
+                    label: Text(" Phone Number "),
+                    prefixIcon: Icon(
+                      Icons.phone,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.phone,
+                controller: emergencyNumber,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "9145369999",
+                    label: Text(" Emergency Phone Number "),
+                    prefixIcon: Icon(
+                      Icons.contact_emergency,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.streetAddress,
+                controller: localAddress,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Karve Nagar ,2nd Floor ,  Flat no. 30 ",
+                    label: Text(" Local Address "),
+                    prefixIcon: Icon(
+                      Icons.location_city,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                controller: rollNumber,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "51112",
+                    label: Text("Roll Number "),
+                    prefixIcon: Icon(
+                      Icons.pin,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 10.0,
+                        spreadRadius: -5,
+                        offset: Offset(
+                          0,
+                          5,
+                        ),
+                      )
+                    ],
+                    color: Colors.deepPurple[50],
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                        width: 1, color: Colors.grey, style: BorderStyle.solid),
+                    borderRadius: BorderRadius.circular(10)),
+                child: _selectedImage != null
+                    ? Image.file(
+                        _selectedImage!,
+                      )
+                    : IconButton(
+                        splashColor: null,
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                          size: 50,
+                          color: Colors.deepPurple,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Select Image "),
+                                  actions: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextButton(
+                                            onPressed: _pickImageFromCamera,
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.camera_alt),
+                                                SizedBox(width: 20),
+                                                Text("Camera ")
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: _pickImageFromGallery,
-                                          child: const Row(
-                                            children: [
-                                              Icon(Icons.upload_file),
-                                              SizedBox(width: 20),
-                                              Text("Gallery ")
-                                            ],
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextButton(
+                                            onPressed: _pickImageFromGallery,
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.upload_file),
+                                                SizedBox(width: 20),
+                                                Text("Gallery ")
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                    ),
-            ),
-            const SizedBox(height: 10),
-            _buildClassChoiceChip(),
-            const SizedBox(height: 10),
-            _buildDivChoiceChip(),
-            const SizedBox(height: 10),
-            _buildBloodGroupDropDown(),
-            const SizedBox(height: 10),
-            _buildGenderChoiceChip(),
-            const SizedBox(height: 10),
-            _buildSignupButton(),
-            const SizedBox(height: 30),
-            _buildLogin()
-          ],
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                      ),
+              ),
+              const SizedBox(height: 10),
+              _buildClassChoiceChip(),
+              const SizedBox(height: 10),
+              _buildDivChoiceChip(),
+              const SizedBox(height: 10),
+              _buildBloodGroupDropDown(),
+              const SizedBox(height: 10),
+              _buildGenderChoiceChip(),
+              const SizedBox(height: 10),
+              _buildSignupButton(),
+              const SizedBox(height: 30),
+              _buildLogin()
+            ],
+          ),
         ),
       ),
     );
@@ -303,6 +352,25 @@ class _SignupState extends State<Signup> {
   Widget _buildSignupButton() {
     return ElevatedButton(
         onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+            // showDialog(
+            //     context: context,
+            //     builder: (context) {
+            //       return const AlertDialog(
+            //         actions: [Text("Success")],
+            //       );
+            //     });
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             StudentQR(studentData: "Student Data ")));
+          }
           debugPrint("Entered Full Name  :  ${fullNameController.text}");
           debugPrint("DOB  :  ${dateOfBirth.text}");
           debugPrint("AY  :  ${academicYear.text}");
