@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:qr_image/qr_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -37,13 +36,7 @@ class _SignupState extends State<Signup> {
   String? _selectedDivision;
   String? _selectedBloodGroup = bloodGroups.first;
   File? _selectedImage;
-  var qr = QRImage(
-    "https://google.com/",
-    size: 300,
-    radius: 10,
-    logoRound: true,
-    typeNumber: 5,
-  ).generate();
+
   @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
@@ -459,9 +452,5 @@ class _SignupState extends State<Signup> {
     setState(() {
       _selectedImage = File(returnedImage.path);
     });
-  }
-
-  QRImage _generateQRCode(String label) {
-    return QRImage(label);
   }
 }

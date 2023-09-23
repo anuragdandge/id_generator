@@ -37,7 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: ^1.0.4
   image_cropper: ^5.0.0
-  qr_image: ^1.0.0
+  qr_flutter: ^4.1.0
+  flutter_barcode_scanner: ^2.0.0
+  mobile_scanner: ^3.4.1
 
 
 dev_dependencies:
