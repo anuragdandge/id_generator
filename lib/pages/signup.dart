@@ -1,7 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+CollectionReference Students =
+    FirebaseFirestore.instance.collection('Students');
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -31,13 +39,28 @@ class _SignupState extends State<Signup> {
   TextEditingController emergencyNumber = TextEditingController();
   TextEditingController localAddress = TextEditingController();
   TextEditingController rollNumber = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool rememberUser = false;
+  String uuid = Uuid().v4();
   String? _selectedClass;
   String? _selectedGender;
   String? _selectedDivision;
   String? _selectedBloodGroup = bloodGroups.first;
   File? _selectedImage;
   final _formKey = GlobalKey<FormState>();
+
+  RegExp pass_valid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+
+  //A function that validate user entered password
+  bool validatePassword(String pass) {
+    String _password = pass.trim();
+
+    if (pass_valid.hasMatch(_password)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +137,17 @@ class _SignupState extends State<Signup> {
               const SizedBox(
                 height: 40,
               ),
+              Center(
+                child: _selectPassportPhoto(),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
               TextFormField(
+                maxLength: 30,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Full Name ';
                   }
                   return null;
                 },
@@ -134,9 +164,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 10,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please Enter Date of Birth ';
                   }
                   return null;
                 },
@@ -144,7 +175,7 @@ class _SignupState extends State<Signup> {
                 controller: dateOfBirth,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: "01/01/2000",
+                    hintText: "dd/mm/yyyy",
                     label: Text(" Date OF Birth  "),
                     prefixIcon: Icon(
                       Icons.date_range,
@@ -153,9 +184,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 4,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Academic Year ';
                   }
                   return null;
                 },
@@ -172,9 +204,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 10,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Phone Number ';
                   }
                   return null;
                 },
@@ -191,9 +224,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 10,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Emergency Number ';
                   }
                   return null;
                 },
@@ -210,9 +244,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 50,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Address ';
                   }
                   return null;
                 },
@@ -229,9 +264,10 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                maxLength: 5,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Please enter Roll Number ';
                   }
                   return null;
                 },
@@ -247,83 +283,6 @@ class _SignupState extends State<Signup> {
                     )),
               ),
               const SizedBox(height: 10),
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 10.0,
-                        spreadRadius: -5,
-                        offset: Offset(
-                          0,
-                          5,
-                        ),
-                      )
-                    ],
-                    color: Colors.deepPurple[50],
-                    shape: BoxShape.rectangle,
-                    border: Border.all(
-                        width: 1, color: Colors.grey, style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(10)),
-                child: _selectedImage != null
-                    ? Image.file(
-                        _selectedImage!,
-                      )
-                    : IconButton(
-                        splashColor: null,
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          size: 50,
-                          color: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Select Image "),
-                                  actions: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextButton(
-                                            onPressed: _pickImageFromCamera,
-                                            child: const Row(
-                                              children: [
-                                                Icon(Icons.camera_alt),
-                                                SizedBox(width: 20),
-                                                Text("Camera ")
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextButton(
-                                            onPressed: _pickImageFromGallery,
-                                            child: const Row(
-                                              children: [
-                                                Icon(Icons.upload_file),
-                                                SizedBox(width: 20),
-                                                Text("Gallery ")
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-              ),
-              const SizedBox(height: 10),
               _buildClassChoiceChip(),
               const SizedBox(height: 10),
               _buildDivChoiceChip(),
@@ -332,13 +291,124 @@ class _SignupState extends State<Signup> {
               const SizedBox(height: 10),
               _buildGenderChoiceChip(),
               const SizedBox(height: 10),
+              TextFormField(
+                maxLength: 12,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please Enter Password ';
+                  } else {
+                    bool result = validatePassword(value);
+                    if (result) {
+                      // create account event
+                      return null;
+                    } else {
+                      return " Password should contain Capital, small letter & Number & Special";
+                    }
+                  }
+                },
+                keyboardType: TextInputType.visiblePassword,
+                controller: password,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Abc#123",
+                    label: Text("Password "),
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Colors.deepPurple,
+                    )),
+              ),
+              const SizedBox(height: 30),
               _buildSignupButton(),
               const SizedBox(height: 30),
-              _buildLogin()
+              _buildLogin(),
+              const SizedBox(height: 60),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _selectPassportPhoto() {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 10.0,
+              spreadRadius: -5,
+              offset: Offset(
+                0,
+                5,
+              ),
+            )
+          ],
+          color: Colors.deepPurple[50],
+          shape: BoxShape.rectangle,
+          border: Border.all(
+              width: 1, color: Colors.grey, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(10)),
+      child: _selectedImage != null
+          ? Image.file(
+              _selectedImage!,
+            )
+          : IconButton(
+              splashColor: null,
+              icon: const Icon(
+                Icons.add_a_photo,
+                size: 50,
+                color: Colors.deepPurple,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return _buildAlertDialog();
+                    });
+              },
+            ),
+    );
+  }
+
+  Widget _buildAlertDialog() {
+    return AlertDialog(
+      title: const Text("Select Image "),
+      actions: [
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: _pickImageFromCamera,
+                child: const Row(
+                  children: [
+                    Icon(Icons.camera_alt),
+                    SizedBox(width: 20),
+                    Text("Camera ")
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: _pickImageFromGallery,
+                child: const Row(
+                  children: [
+                    Icon(Icons.upload_file),
+                    SizedBox(width: 20),
+                    Text("Gallery ")
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -371,6 +441,8 @@ class _SignupState extends State<Signup> {
             //         builder: (context) =>
             //             StudentQR(studentData: "Student Data ")));
           }
+          _generateNewUuid();
+          debugPrint("UUID  :  ${uuid.toString()}");
           debugPrint("Entered Full Name  :  ${fullNameController.text}");
           debugPrint("DOB  :  ${dateOfBirth.text}");
           debugPrint("AY  :  ${academicYear.text}");
@@ -381,7 +453,11 @@ class _SignupState extends State<Signup> {
           debugPrint("Selected Class :  $_selectedClass");
           debugPrint("Selected Gender:  $_selectedGender");
           debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
-          debugPrint("Passport Photo :  $_selectedImage");
+          debugPrint("Passport Photo Location:  $_selectedImage");
+          debugPrint("Password:  ${password.text}");
+          _signup();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => StudentQR()));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
@@ -407,7 +483,10 @@ class _SignupState extends State<Signup> {
                   backgroundColor: Colors.transparent,
                   elevation: 0.0),
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                });
               },
               child: const Text(
                 "Login Here ",
@@ -419,11 +498,13 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _buildClassChoiceChip() {
-    return Wrap(spacing: 5.0, children: <Widget>[
-      _buildChoiceChip_Class("FYMCA"),
-      const SizedBox(width: 10),
-      _buildChoiceChip_Class("SYMCA")
-    ]);
+    return Container(
+      child: Wrap(spacing: 5.0, children: <Widget>[
+        _buildChoiceChip_Class("FYMCA"),
+        const SizedBox(width: 10),
+        _buildChoiceChip_Class("SYMCA")
+      ]),
+    );
   }
 
   Widget _buildGenderChoiceChip() {
@@ -511,14 +592,58 @@ class _SignupState extends State<Signup> {
   Future _pickImageFromCamera() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.camera);
-    // if (returnedImage != null) {
-    //   await imageHelper.crop(file: returnedImage, cropStyle: CropStyle.circle);
-    // } else {
-    //   return;
-    // }
+
     if (returnedImage == null) return;
     setState(() {
       _selectedImage = File(returnedImage.path);
     });
   }
+
+  void _generateNewUuid() {
+    setState(() {
+      uuid = Uuid().v4(); // Generate a new random UUID
+    });
+  }
+
+  void _signup() {
+    if (fullNameController.text == "") {
+      final snackbar = SnackBar(content: const Text(" Enter Some Text "));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    } else {
+      FirebaseFirestore.instance
+          .collection('Students')
+          .add({
+            'UUID': uuid,
+            'Full_Name': fullNameController,
+            'Phone_Number': phoneController,
+            'Password': phoneController,
+            'Emergency_Number': emergencyNumber,
+            'Roll_number': rollNumber,
+            'Division': _selectedDivision,
+            'Blood_Group': _selectedBloodGroup,
+            'Class': _selectedClass,
+            'Gender': _selectedGender,
+            'Date_Of_Birth': dateOfBirth,
+            'Academic_Year': academicYear,
+            'Local_Address': localAddress,
+          })
+          .whenComplete(() => Get.snackbar("Success", "Submitted "))
+          .catchError((error, stackTrace) {
+            Get.snackbar("Error", "Something Went Wrong ");
+            debugPrint(error.toString());
+          });
+
+      // setPreferance();
+      setState(() {
+        Get.to(() => const StudentQR());
+      });
+    }
+  }
+
+  // setPreferance() async {
+  //   final SharedPreferences sharedPreferences =
+  //       await SharedPreferences.getInstance();
+  //   sharedPreferences.setString('full_name', fullNameController.text);
+  //   sharedPreferences.setString('phone_number', phoneController.text);
+  // }
 }

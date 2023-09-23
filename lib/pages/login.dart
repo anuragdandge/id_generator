@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:id_generator/pages/signup.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -180,7 +181,12 @@ class _LoginState extends State<Login> {
           _buildGreyText("Don't have an account? "),
           TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Signup()));
+                });
+              },
               child: const Text(
                 "Register Here ",
                 style: TextStyle(color: Colors.deepPurple),

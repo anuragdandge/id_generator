@@ -7,7 +7,7 @@ class StudentQR extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welcome "),
+        title: const Text("Welcome "),
       ),
     );
   }
