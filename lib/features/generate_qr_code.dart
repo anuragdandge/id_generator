@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class GenerateQR extends StatefulWidget {
-  const GenerateQR({super.key});
+class GenerateQR extends StatelessWidget {
+  late String data = "-";
+  GenerateQR({super.key, required String data});
 
-  @override
-  State<GenerateQR> createState() => _GenerateQRState();
-}
-
-class _GenerateQRState extends State<GenerateQR> {
-  String data = "Anurag";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +27,8 @@ class _GenerateQRState extends State<GenerateQR> {
                 data: data,
                 backgroundColor: Color.fromARGB(255, 193, 132, 255),
               ),
-            )
+            ),
+            Text(" scanned : $data")
           ],
         ));
   }
