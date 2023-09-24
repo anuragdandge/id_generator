@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "1089712234175",
-    "firebase_url": "https://id-generator-bf84a-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "id-generator-bf84a",
-    "storage_bucket": "id-generator-bf84a.appspot.com"
+    "project_number": "29601348897",
+    "project_id": "id-generator-app",
+    "storage_bucket": "id-generator-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1089712234175:android:9c148126af0d40ee6c300a",
+        "mobilesdk_app_id": "1:29601348897:android:7eb5901989a0118b13d260",
         "android_client_info": {
           "package_name": "com.example.id_generator"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCPZP8XaSKzFhPdgoyQLjLfm21GTbnhOZ4"
+          "current_key": "AIzaSyBIjyknokmMjjZff7pV58iLq0H_4GyUvKs"
         }
       ],
       "services": {

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -350,6 +350,7 @@ class _SignupState extends State<Signup> {
       child: _selectedImage != null
           ? Image.file(
               _selectedImage!,
+              fit: BoxFit.cover,
             )
           : IconButton(
               splashColor: null,
@@ -420,11 +421,27 @@ class _SignupState extends State<Signup> {
     return ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            // If the form is valid, display a snackbar. In the real world,
-            // you'd often call a server or save the information in a database.
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Processing Data')),
             );
+            _generateNewUuid();
+            CollectionReference collRef =
+                FirebaseFirestore.instance.collection('students');
+            collRef.add({
+              'fullname': fullNameController.text,
+              'uuid': uuid,
+              'phonenumber': phoneController.text,
+              'password': password.text,
+              'emergencynumber': emergencyNumber.text,
+              'division': _selectedDivision,
+              'bloodgroup': _selectedBloodGroup,
+              'class': _selectedClass,
+              'gender': _selectedGender,
+              'dateofbirth': dateOfBirth.text,
+              'academicyear': academicYear.text,
+              'localaddress': localAddress.text,
+              'rollnumber': rollNumber.text,
+            });
             // showDialog(
             //     context: context,
             //     builder: (context) {
@@ -438,7 +455,6 @@ class _SignupState extends State<Signup> {
             //         builder: (context) =>
             //             StudentQR(studentData: "Student Data ")));
           }
-          _generateNewUuid();
           debugPrint("UUID  :  ${uuid.toString()}");
           debugPrint("Entered Full Name  :  ${fullNameController.text}");
           debugPrint("DOB  :  ${dateOfBirth.text}");
@@ -453,8 +469,9 @@ class _SignupState extends State<Signup> {
           debugPrint("Passport Photo Location:  $_selectedImage");
           debugPrint("Password:  ${password.text}");
           _signup();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => StudentQR()));
+          uploadImage();
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => StudentQR()));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
@@ -603,26 +620,19 @@ class _SignupState extends State<Signup> {
   }
 
   void _signup() {
-    // 'UUID': uuid,
-    //         'Full_Name': fullNameController,
-    //         'Phone_Number': phoneController,
-    //         'Password': phoneController,
-    //         'Emergency_Number': emergencyNumber,
-    //         'Roll_number': rollNumber,
-    //         'Division': _selectedDivision,
-    //         'Blood_Group': _selectedBloodGroup,
-    //         'Class': _selectedClass,
-    //         'Gender': _selectedGender,
-    //         'Date_Of_Birth': dateOfBirth,
-    //         'Academic_Year': academicYear,
-    //         'Local_Address': localAddress,
-
     // setPreferance();
-    setState(() {
-      Get.to(() => const StudentQR());
-    });
+    // setState(() {
+    //   Get.to(() => const StudentQR());
+    // });
   }
-}
+
+  uploadImage() async {
+    // var imagename = basename();
+
+    var firebaseStorage = FirebaseStorage.instance.ref("$uuid");
+    await firebaseStorage.putFile(_selectedImage!);
+    var url = firebaseStorage.getDownloadURL();
+  }
 
   // setPreferance() async {
   //   final SharedPreferences sharedPreferences =
@@ -630,3 +640,4 @@ class _SignupState extends State<Signup> {
   //   sharedPreferences.setString('full_name', fullNameController.text);
   //   sharedPreferences.setString('phone_number', phoneController.text);
   // }
+}

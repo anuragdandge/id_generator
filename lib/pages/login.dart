@@ -14,6 +14,7 @@ class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
@@ -68,45 +69,48 @@ class _LoginState extends State<Login> {
   }
 
   Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Welcome ",
-          style: TextStyle(
-              color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
-        ),
-        _buildGreyText("Login with your Information "),
-        const SizedBox(
-          height: 60,
-        ),
-        _buildInputField(
-          phoneController,
-          "Phone Number",
-          10,
-          TextInputType.phone,
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        _buildInputField(
-          passwordController,
-          "Password",
-          10,
-          TextInputType.text,
-          isPassword: true,
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        _buildRememberForgot(),
-        const SizedBox(
-          height: 30,
-        ),
-        _buildLoginButton(),
-        const SizedBox(height: 30),
-        _buildRegister()
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Welcome ",
+            style: TextStyle(
+                color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
+          ),
+          _buildGreyText("Login with your Information "),
+          const SizedBox(
+            height: 60,
+          ),
+          _buildInputField(
+            phoneController,
+            "Phone Number",
+            10,
+            TextInputType.phone,
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          _buildInputField(
+            passwordController,
+            "Password",
+            10,
+            TextInputType.text,
+            isPassword: true,
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          _buildRememberForgot(),
+          const SizedBox(
+            height: 30,
+          ),
+          _buildLoginButton(),
+          const SizedBox(height: 30),
+          _buildRegister()
+        ],
+      ),
     );
   }
 
@@ -121,6 +125,12 @@ class _LoginState extends State<Login> {
       TextEditingController controller, String label, int ml, TextInputType tit,
       {isPassword = false}) {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please Provide Credential  ';
+        }
+        return null;
+      },
       controller: controller,
       maxLength: 10,
       keyboardType: tit,
@@ -160,6 +170,13 @@ class _LoginState extends State<Login> {
         onPressed: () {
           debugPrint("Email ${phoneController.text}");
           debugPrint("Password ${passwordController.text}");
+          if (_formKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
