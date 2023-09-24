@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-CollectionReference Students =
-    FirebaseFirestore.instance.collection('Students');
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -606,39 +603,26 @@ class _SignupState extends State<Signup> {
   }
 
   void _signup() {
-    if (fullNameController.text == "") {
-      final snackbar = SnackBar(content: const Text(" Enter Some Text "));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-    } else {
-      FirebaseFirestore.instance
-          .collection('Students')
-          .add({
-            'UUID': uuid,
-            'Full_Name': fullNameController,
-            'Phone_Number': phoneController,
-            'Password': phoneController,
-            'Emergency_Number': emergencyNumber,
-            'Roll_number': rollNumber,
-            'Division': _selectedDivision,
-            'Blood_Group': _selectedBloodGroup,
-            'Class': _selectedClass,
-            'Gender': _selectedGender,
-            'Date_Of_Birth': dateOfBirth,
-            'Academic_Year': academicYear,
-            'Local_Address': localAddress,
-          })
-          .whenComplete(() => Get.snackbar("Success", "Submitted "))
-          .catchError((error, stackTrace) {
-            Get.snackbar("Error", "Something Went Wrong ");
-            debugPrint(error.toString());
-          });
+    // 'UUID': uuid,
+    //         'Full_Name': fullNameController,
+    //         'Phone_Number': phoneController,
+    //         'Password': phoneController,
+    //         'Emergency_Number': emergencyNumber,
+    //         'Roll_number': rollNumber,
+    //         'Division': _selectedDivision,
+    //         'Blood_Group': _selectedBloodGroup,
+    //         'Class': _selectedClass,
+    //         'Gender': _selectedGender,
+    //         'Date_Of_Birth': dateOfBirth,
+    //         'Academic_Year': academicYear,
+    //         'Local_Address': localAddress,
 
-      // setPreferance();
-      setState(() {
-        Get.to(() => const StudentQR());
-      });
-    }
+    // setPreferance();
+    setState(() {
+      Get.to(() => const StudentQR());
+    });
   }
+}
 
   // setPreferance() async {
   //   final SharedPreferences sharedPreferences =
@@ -646,4 +630,3 @@ class _SignupState extends State<Signup> {
   //   sharedPreferences.setString('full_name', fullNameController.text);
   //   sharedPreferences.setString('phone_number', phoneController.text);
   // }
-}
