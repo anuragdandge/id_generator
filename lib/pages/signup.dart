@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_unnecessary_containers
-
+import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -403,11 +403,11 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  Widget _alertDialogForNoConnectivity() {
-    return AlertDialog(
-      title: Text("No Internet Connectivity !!! "),
-    );
-  }
+  // Widget _alertDialogForNoConnectivity() {
+  //   return const AlertDialog(
+  //     title: Text("No Internet Connectivity !!! "),
+  //   );
+  // }
 
   Widget _buildAlertDialog() {
     return AlertDialog(
@@ -484,7 +484,7 @@ class _SignupState extends State<Signup> {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return _alertDialogForNoConnectivity();
+                  return SignUpWidgets().alertDialogForNoConnectivity();
                 });
           } else {
             if (_formKey.currentState!.validate()) {
