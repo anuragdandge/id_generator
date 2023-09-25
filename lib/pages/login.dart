@@ -1,4 +1,6 @@
+// import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter/material.dart';
+import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/signup.dart';
 
 class Login extends StatefulWidget {
@@ -15,6 +17,8 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
   final _formKey = GlobalKey<FormState>();
+  final shakeKey = GlobalKey<ShakeWidgetState>();
+
   @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
@@ -83,22 +87,31 @@ class _LoginState extends State<Login> {
           const SizedBox(
             height: 60,
           ),
-          _buildInputField(
-            phoneController,
-            "Phone Number",
-            10,
-            TextInputType.phone,
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          _buildInputField(
-            passwordController,
-            "Password",
-            10,
-            TextInputType.text,
-            isPassword: true,
-          ),
+          ShakeWidget(
+              key: shakeKey,
+              shakeOffset: 10,
+              shakeCount: 3,
+              shakeDuration: const Duration(milliseconds: 500),
+              child: Column(
+                children: [
+                  _buildInputField(
+                    phoneController,
+                    "Phone Number",
+                    10,
+                    TextInputType.phone,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  _buildInputField(
+                    passwordController,
+                    "Password",
+                    10,
+                    TextInputType.text,
+                    isPassword: true,
+                  ),
+                ],
+              )),
           const SizedBox(
             height: 30,
           ),
@@ -108,7 +121,7 @@ class _LoginState extends State<Login> {
           ),
           _buildLoginButton(),
           const SizedBox(height: 30),
-          _buildRegister()
+          _buildRegister(),
         ],
       ),
     );
@@ -170,13 +183,15 @@ class _LoginState extends State<Login> {
         onPressed: () {
           debugPrint("Email ${phoneController.text}");
           debugPrint("Password ${passwordController.text}");
+
+          // If the form is valid, display a snackbar. In the real world,
           if (_formKey.currentState!.validate()) {
-            // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Processing Data')),
             );
           }
+          shakeKey.currentState?.shake();
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
@@ -201,7 +216,7 @@ class _LoginState extends State<Login> {
               onPressed: () {
                 setState(() {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Signup()));
+                      MaterialPageRoute(builder: (context) => const Signup()));
                 });
               },
               child: const Text(

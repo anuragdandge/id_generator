@@ -1,10 +1,14 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,7 +42,7 @@ class _SignupState extends State<Signup> {
   TextEditingController rollNumber = TextEditingController();
   TextEditingController password = TextEditingController();
   bool rememberUser = false;
-  String uuid = Uuid().v4();
+  String uuid = const Uuid().v4();
   String? _selectedClass;
   String? _selectedGender;
   String? _selectedDivision;
@@ -327,46 +331,81 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _selectPassportPhoto() {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 10.0,
-              spreadRadius: -5,
-              offset: Offset(
-                0,
-                5,
+    if (_selectedImage != null) {
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.file(
+                _selectedImage!,
+                fit: BoxFit.cover,
+                width: 100,
+                height: 100,
               ),
-            )
-          ],
-          color: Colors.deepPurple[50],
-          shape: BoxShape.rectangle,
-          border: Border.all(
-              width: 1, color: Colors.grey, style: BorderStyle.solid),
-          borderRadius: BorderRadius.circular(10)),
-      child: _selectedImage != null
-          ? Image.file(
-              _selectedImage!,
-              fit: BoxFit.cover,
-            )
-          : IconButton(
-              splashColor: null,
-              icon: const Icon(
-                Icons.add_a_photo,
-                size: 50,
-                color: Colors.deepPurple,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return _buildAlertDialog();
-                    });
-              },
             ),
+          ),
+          Positioned(
+            right: -10,
+            top: -10,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.red,
+                  size: 30,
+                )),
+          )
+        ],
+      );
+    } else {
+      return IconButton(
+        // splashColor: null,
+        icon: const Icon(
+          Icons.add_a_photo,
+          size: 50,
+          color: Colors.deepPurple,
+        ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return _buildAlertDialog();
+              });
+        },
+      );
+
+      // return GestureDetector(
+      //     onTap: () => showDialog(
+      //         context: context,
+      //         builder: (context) {
+      //           return _buildAlertDialog();
+      //         }),
+      //     child: SvgPicture.asset(
+      //       './assets/images/emptyProfile.svg',
+      //     ));
+      // return FilledButton(
+      //     onPressed: () => showDialog(
+      //         context: context,
+      //         builder: (context) {
+      //           return _buildAlertDialog();
+      //         }),
+      //     child: Image.asset('./assets/images/emptyProfile.png'));
+      // return Container(
+
+      //   child: Image.asset('./assets/images/emptyProfile.png'),
+      // );
+    }
+  }
+
+  Widget _alertDialogForNoConnectivity() {
+    return AlertDialog(
+      title: Text("No Internet Connectivity !!! "),
     );
   }
 
@@ -378,12 +417,16 @@ class _SignupState extends State<Signup> {
           children: [
             Expanded(
               child: TextButton(
+                style: ButtonStyle(
+                    iconColor:
+                        MaterialStatePropertyAll(Colors.deepPurple[400])),
                 onPressed: _pickImageFromCamera,
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.camera_alt),
                     SizedBox(width: 20),
-                    Text("Camera ")
+                    Text("Camera ",
+                        style: TextStyle(color: Colors.deepPurple[400])),
                   ],
                 ),
               ),
@@ -394,18 +437,32 @@ class _SignupState extends State<Signup> {
           children: [
             Expanded(
               child: TextButton(
+                style: ButtonStyle(
+                    iconColor:
+                        MaterialStatePropertyAll(Colors.deepPurple[400])),
                 onPressed: _pickImageFromGallery,
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.upload_file),
                     SizedBox(width: 20),
-                    Text("Gallery ")
+                    Text("Gallery ",
+                        style: TextStyle(color: Colors.deepPurple[400]))
                   ],
                 ),
               ),
             ),
           ],
         ),
+        Positioned(
+          child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                "Close",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+        )
       ],
     );
   }
@@ -419,42 +476,86 @@ class _SignupState extends State<Signup> {
 
   Widget _buildSignupButton() {
     return ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Processing Data')),
-            );
-            _generateNewUuid();
-            CollectionReference collRef =
-                FirebaseFirestore.instance.collection('students');
-            collRef.add({
-              'fullname': fullNameController.text,
-              'uuid': uuid,
-              'phonenumber': phoneController.text,
-              'password': password.text,
-              'emergencynumber': emergencyNumber.text,
-              'division': _selectedDivision,
-              'bloodgroup': _selectedBloodGroup,
-              'class': _selectedClass,
-              'gender': _selectedGender,
-              'dateofbirth': dateOfBirth.text,
-              'academicyear': academicYear.text,
-              'localaddress': localAddress.text,
-              'rollnumber': rollNumber.text,
-            });
-            // showDialog(
-            //     context: context,
-            //     builder: (context) {
-            //       return const AlertDialog(
-            //         actions: [Text("Success")],
-            //       );
-            //     });
+        onPressed: () async {
+          var connectivityResult = await Connectivity().checkConnectivity();
+
+          if (connectivityResult == ConnectivityResult.none) {
+            // ignore: use_build_context_synchronously
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return _alertDialogForNoConnectivity();
+                });
+          } else {
+            if (_formKey.currentState!.validate()) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Processing Data')),
+              );
+              _generateNewUuid();
+              CollectionReference collRef =
+                  FirebaseFirestore.instance.collection('students');
+              collRef.add({
+                'fullname': fullNameController.text,
+                'uuid': uuid,
+                'phonenumber': phoneController.text,
+                'password': password.text,
+                'emergencynumber': emergencyNumber.text,
+                'division': _selectedDivision,
+                'bloodgroup': _selectedBloodGroup,
+                'class': _selectedClass,
+                'gender': _selectedGender,
+                'dateofbirth': dateOfBirth.text,
+                'academicyear': academicYear.text,
+                'localaddress': localAddress.text,
+                'rollnumber': rollNumber.text,
+              });
+            }
+            _signup();
+            uploadImage();
+            // ignore: use_build_context_synchronously
             // Navigator.push(
             //     context,
             //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             StudentQR(studentData: "Student Data ")));
+            //         builder: (context) => StudentQR(
+            //               data: uuid,
+            //               file: _selectedImage!,
+            //               name: fullNameController.text,
+            //               phone: phoneController.text,
+            //             )));
+            setState(() {
+              Get.to(StudentQR(
+                data: uuid,
+                file: _selectedImage!,
+                name: fullNameController.text,
+                phone: phoneController.text,
+              ));
+            });
           }
+
+          // if (_formKey.currentState!.validate()) {
+          // ignore: use_build_context_synchronously
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(content: Text('Processing Data')),
+          // );
+          // _generateNewUuid();
+          // CollectionReference collRef =
+          //     FirebaseFirestore.instance.collection('students');
+          // collRef.add({
+          //   'fullname': fullNameController.text,
+          //   'uuid': uuid,
+          //   'phonenumber': phoneController.text,
+          //   'password': password.text,
+          //   'emergencynumber': emergencyNumber.text,
+          //   'division': _selectedDivision,
+          //   'bloodgroup': _selectedBloodGroup,
+          //   'class': _selectedClass,
+          //   'gender': _selectedGender,
+          //   'dateofbirth': dateOfBirth.text,
+          //   'academicyear': academicYear.text,
+          //   'localaddress': localAddress.text,
+          //   'rollnumber': rollNumber.text,
+          // });
+          // }
           debugPrint("UUID  :  ${uuid.toString()}");
           debugPrint("Entered Full Name  :  ${fullNameController.text}");
           debugPrint("DOB  :  ${dateOfBirth.text}");
@@ -468,10 +569,17 @@ class _SignupState extends State<Signup> {
           debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
           debugPrint("Passport Photo Location:  $_selectedImage");
           debugPrint("Password:  ${password.text}");
-          _signup();
-          uploadImage();
+          // _signup();
+          // uploadImage();
           // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => StudentQR()));
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => StudentQR(
+          //               data: uuid,
+          //               file: _selectedImage!,
+          //               name: fullNameController.text,
+          //               phone: phoneController.text,
+          //             )));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
@@ -499,7 +607,7 @@ class _SignupState extends State<Signup> {
               onPressed: () {
                 setState(() {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login()));
+                      MaterialPageRoute(builder: (context) => const Login()));
                 });
               },
               child: const Text(
@@ -615,7 +723,7 @@ class _SignupState extends State<Signup> {
 
   void _generateNewUuid() {
     setState(() {
-      uuid = Uuid().v4(); // Generate a new random UUID
+      uuid = const Uuid().v4(); // Generate a new random UUID
     });
   }
 
@@ -627,17 +735,17 @@ class _SignupState extends State<Signup> {
   }
 
   uploadImage() async {
-    // var imagename = basename();
-
     var firebaseStorage = FirebaseStorage.instance.ref("$uuid");
-    await firebaseStorage.putFile(_selectedImage!);
+    if (_selectedImage != null) {
+      await firebaseStorage.putFile(_selectedImage!);
+    } else {
+      showDialog(
+          context: context,
+          builder: ((context) => const AlertDialog(
+                title: Text("Select Profile Photo "),
+              )));
+    }
     var url = firebaseStorage.getDownloadURL();
+    debugPrint("$url");
   }
-
-  // setPreferance() async {
-  //   final SharedPreferences sharedPreferences =
-  //       await SharedPreferences.getInstance();
-  //   sharedPreferences.setString('full_name', fullNameController.text);
-  //   sharedPreferences.setString('phone_number', phoneController.text);
-  // }
 }

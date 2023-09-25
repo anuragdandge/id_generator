@@ -14,7 +14,7 @@ class GenerateQR extends StatelessWidget {
             size: 40,
           ),
           title: const Text(
-            " Genereated QR Code ",
+            " Generated QR Code ",
             style: TextStyle(fontSize: 30),
           ),
         ),
@@ -25,7 +25,7 @@ class GenerateQR extends StatelessWidget {
             Center(
               child: QrImageView(
                 data: data,
-                backgroundColor: Color.fromARGB(255, 193, 132, 255),
+                backgroundColor: const Color.fromARGB(255, 193, 132, 255),
               ),
             ),
             Text(" scanned : $data")
