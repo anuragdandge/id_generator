@@ -6,4 +6,11 @@ class SignUpWidgets {
       title: Text("No Internet Connectivity !!! "),
     );
   }
+
+  Widget buildGreyText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.grey),
+    );
+  }
 }

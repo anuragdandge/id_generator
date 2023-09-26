@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class GenerateQR extends StatelessWidget {
-  late String data = "-";
-  GenerateQR({super.key, required String data});
+  final String data;
+  const GenerateQR({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

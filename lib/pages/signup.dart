@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers
+// ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously
 import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,13 +49,26 @@ class _SignupState extends State<Signup> {
   File? _selectedImage;
   final _formKey = GlobalKey<FormState>();
 
-  RegExp pass_valid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  RegExp fullNameValid =
+      RegExp(r"^[a-zA-Z]+(([',\.\-\s][a-zA-Z ])?[a-zA-Z]*)*$");
 
   //A function that validate user entered password
   bool validatePassword(String pass) {
     String _password = pass.trim();
 
-    if (pass_valid.hasMatch(_password)) {
+    if (passValid.hasMatch(_password)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //A function that validate user entered Full Name
+  bool validateFullName(String name) {
+    String _fullName = name.trim();
+
+    if (fullNameValid.hasMatch(_fullName)) {
       return true;
     } else {
       return false;
@@ -134,7 +146,7 @@ class _SignupState extends State<Signup> {
                 style: TextStyle(
                     color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
               ),
-              _buildGreyText("Signup with your Information"),
+              SignUpWidgets().buildGreyText("Signup with your Information"),
               const SizedBox(
                 height: 40,
               ),
@@ -149,8 +161,14 @@ class _SignupState extends State<Signup> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Full Name ';
+                  } else {
+                    bool result = validateFullName(value);
+                    if (result) {
+                      return null;
+                    } else {
+                      return " Name Should Contain Alphabets Only ";
+                    }
                   }
-                  return null;
                 },
                 keyboardType: TextInputType.name,
                 controller: fullNameController,
@@ -300,7 +318,6 @@ class _SignupState extends State<Signup> {
                   } else {
                     bool result = validatePassword(value);
                     if (result) {
-                      // create account event
                       return null;
                     } else {
                       return " Password should contain Capital, small letter & Number & Special";
@@ -332,52 +349,74 @@ class _SignupState extends State<Signup> {
 
   Widget _selectPassportPhoto() {
     if (_selectedImage != null) {
-      return Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ClipRRect(
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          border: Border.all(color: Colors.grey, width: 2),
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.file(
                 _selectedImage!,
                 fit: BoxFit.cover,
-                width: 100,
-                height: 100,
+                width: 116,
+                height: 116,
               ),
             ),
-          ),
-          Positioned(
-            right: -10,
-            top: -10,
-            child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedImage = null;
-                  });
-                },
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.red,
-                  size: 30,
-                )),
-          )
-        ],
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1),
+                    color: Colors.deepPurpleAccent,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                child: IconButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      setState(() {
+                        _selectedImage = null;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 30,
+                    )),
+              ),
+            )
+          ],
+        ),
       );
     } else {
-      return IconButton(
-        // splashColor: null,
-        icon: const Icon(
-          Icons.add_a_photo,
-          size: 50,
-          color: Colors.deepPurple,
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(color: Colors.grey, width: 1),
         ),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return _buildAlertDialog();
-              });
-        },
+        height: 120,
+        width: 120,
+        child: IconButton(
+          // splashColor: null,
+          icon: const Icon(
+            Icons.add_a_photo,
+            size: 60,
+            color: Colors.deepPurple,
+          ),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return _buildAlertDialog();
+                });
+          },
+        ),
       );
 
       // return GestureDetector(
@@ -403,12 +442,6 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  // Widget _alertDialogForNoConnectivity() {
-  //   return const AlertDialog(
-  //     title: Text("No Internet Connectivity !!! "),
-  //   );
-  // }
-
   Widget _buildAlertDialog() {
     return AlertDialog(
       title: const Text("Select Image "),
@@ -420,7 +453,10 @@ class _SignupState extends State<Signup> {
                 style: ButtonStyle(
                     iconColor:
                         MaterialStatePropertyAll(Colors.deepPurple[400])),
-                onPressed: _pickImageFromCamera,
+                onPressed: () {
+                  _pickImageFromCamera();
+                  Navigator.pop(context);
+                },
                 child: Row(
                   children: [
                     Icon(Icons.camera_alt),
@@ -440,7 +476,10 @@ class _SignupState extends State<Signup> {
                 style: ButtonStyle(
                     iconColor:
                         MaterialStatePropertyAll(Colors.deepPurple[400])),
-                onPressed: _pickImageFromGallery,
+                onPressed: () {
+                  _pickImageFromGallery();
+                  Navigator.pop(context);
+                },
                 child: Row(
                   children: [
                     Icon(Icons.upload_file),
@@ -467,20 +506,11 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.grey),
-    );
-  }
-
   Widget _buildSignupButton() {
     return ElevatedButton(
         onPressed: () async {
           var connectivityResult = await Connectivity().checkConnectivity();
-
           if (connectivityResult == ConnectivityResult.none) {
-            // ignore: use_build_context_synchronously
             showDialog(
                 context: context,
                 builder: (context) {
@@ -488,10 +518,21 @@ class _SignupState extends State<Signup> {
                 });
           } else {
             if (_formKey.currentState!.validate()) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processing Data')),
-              );
+              debugPrint("UUID  :  ${uuid.toString()}");
+              debugPrint("Entered Full Name  :  ${fullNameController.text}");
+              debugPrint("DOB  :  ${dateOfBirth.text}");
+              debugPrint("AY  :  ${academicYear.text}");
+              debugPrint("Phone Number   :  ${phoneController.text}");
+              debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
+              debugPrint("local Address   :  ${localAddress.text}");
+              debugPrint("Roll Number   :  ${rollNumber.text}");
+              debugPrint("Selected Class :  $_selectedClass");
+              debugPrint("Selected Gender:  $_selectedGender");
+              debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
+              debugPrint("Passport Photo Location:  $_selectedImage");
+              debugPrint("Password:  ${password.text}");
               _generateNewUuid();
+
               CollectionReference collRef =
                   FirebaseFirestore.instance.collection('students');
               collRef.add({
@@ -509,20 +550,17 @@ class _SignupState extends State<Signup> {
                 'localaddress': localAddress.text,
                 'rollnumber': rollNumber.text,
               });
+              CollectionReference credRef =
+                  FirebaseFirestore.instance.collection('credentials');
+              credRef.add({
+                'phonenumber': phoneController.text,
+                'password': password.text
+              });
             }
-            _signup();
+            // _signup();
             uploadImage();
-            // ignore: use_build_context_synchronously
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => StudentQR(
-            //               data: uuid,
-            //               file: _selectedImage!,
-            //               name: fullNameController.text,
-            //               phone: phoneController.text,
-            //             )));
             setState(() {
+              Navigator.pop(context);
               Get.to(StudentQR(
                 data: uuid,
                 file: _selectedImage!,
@@ -531,55 +569,6 @@ class _SignupState extends State<Signup> {
               ));
             });
           }
-
-          // if (_formKey.currentState!.validate()) {
-          // ignore: use_build_context_synchronously
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   const SnackBar(content: Text('Processing Data')),
-          // );
-          // _generateNewUuid();
-          // CollectionReference collRef =
-          //     FirebaseFirestore.instance.collection('students');
-          // collRef.add({
-          //   'fullname': fullNameController.text,
-          //   'uuid': uuid,
-          //   'phonenumber': phoneController.text,
-          //   'password': password.text,
-          //   'emergencynumber': emergencyNumber.text,
-          //   'division': _selectedDivision,
-          //   'bloodgroup': _selectedBloodGroup,
-          //   'class': _selectedClass,
-          //   'gender': _selectedGender,
-          //   'dateofbirth': dateOfBirth.text,
-          //   'academicyear': academicYear.text,
-          //   'localaddress': localAddress.text,
-          //   'rollnumber': rollNumber.text,
-          // });
-          // }
-          debugPrint("UUID  :  ${uuid.toString()}");
-          debugPrint("Entered Full Name  :  ${fullNameController.text}");
-          debugPrint("DOB  :  ${dateOfBirth.text}");
-          debugPrint("AY  :  ${academicYear.text}");
-          debugPrint("Phone Number   :  ${phoneController.text}");
-          debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
-          debugPrint("local Address   :  ${localAddress.text}");
-          debugPrint("Roll Number   :  ${rollNumber.text}");
-          debugPrint("Selected Class :  $_selectedClass");
-          debugPrint("Selected Gender:  $_selectedGender");
-          debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
-          debugPrint("Passport Photo Location:  $_selectedImage");
-          debugPrint("Password:  ${password.text}");
-          // _signup();
-          // uploadImage();
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => StudentQR(
-          //               data: uuid,
-          //               file: _selectedImage!,
-          //               name: fullNameController.text,
-          //               phone: phoneController.text,
-          //             )));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: myColor,
@@ -598,7 +587,7 @@ class _SignupState extends State<Signup> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildGreyText("Already have an account ? "),
+          SignUpWidgets().buildGreyText("Already have an account ? "),
           ElevatedButton(
               style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -735,17 +724,22 @@ class _SignupState extends State<Signup> {
   }
 
   uploadImage() async {
-    var firebaseStorage = FirebaseStorage.instance.ref("$uuid");
-    if (_selectedImage != null) {
-      await firebaseStorage.putFile(_selectedImage!);
-    } else {
+    if (_selectedImage == null) {
       showDialog(
           context: context,
-          builder: ((context) => const AlertDialog(
-                title: Text("Select Profile Photo "),
+          builder: ((context) => AlertDialog(
+                title: const Text("Select Profile Photo "),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Close"))
+                ],
               )));
+    } else {
+      var firebaseStorage = FirebaseStorage.instance.ref("$uuid");
+      await firebaseStorage.putFile(_selectedImage!);
     }
-    var url = firebaseStorage.getDownloadURL();
-    debugPrint("$url");
+    // var url = firebaseStorage.getDownloadURL();
+    // debugPrint("$url");
   }
 }

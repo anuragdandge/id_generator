@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/features/qr_scanner.dart';
 import 'package:id_generator/firebase_options.dart';
 import 'package:id_generator/pages/login.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Signup(),
+      home: const Login(),
     );
   }
 }
