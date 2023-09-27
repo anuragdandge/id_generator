@@ -28,11 +28,11 @@ class StudentQR extends StatelessWidget {
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Container(
@@ -58,7 +58,7 @@ class StudentQR extends StatelessWidget {
                     Container(
                       height: 150,
                       width: 150,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.file(
@@ -67,26 +67,26 @@ class StudentQR extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 110,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                               child: Text(
-                            "$name",
+                            name,
                             // "Anurag Dandge",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
-                          Container(child: Text("$phone")),
+                          Container(child: Text(phone)),
                         ],
                       ),
                     )
                   ],
                 ),
               ),
-              TextButton(onPressed: () => Get.to(Login()), child: Text("Login"))
+              TextButton(onPressed: () => Get.to(const Login()), child: const Text("Login"))
             ],
           ),
         ),

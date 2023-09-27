@@ -18,7 +18,7 @@ class _ScanQRState extends State<ScanQR> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Scan QR Code ",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
@@ -29,11 +29,11 @@ class _ScanQRState extends State<ScanQR> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.deepPurple[100]),
@@ -43,29 +43,29 @@ class _ScanQRState extends State<ScanQR> {
                   size: 300,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Center(
                   child: ElevatedButton(
                       style:
-                          ButtonStyle(elevation: MaterialStatePropertyAll(10)),
+                          const ButtonStyle(elevation: MaterialStatePropertyAll(10)),
                       onPressed: scanQRCode,
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.only(left: 50, right: 50),
                         child: Text(
                           "Scan",
                           style: TextStyle(fontSize: 30),
                         ),
                       ))),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
                   "Scanned Res : \n $_scannedQrResult",
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
               ),
             ],

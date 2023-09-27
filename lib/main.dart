@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:id_generator/features/authentication_login.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/features/qr_scanner.dart';
 import 'package:id_generator/firebase_options.dart';
@@ -12,6 +14,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MongoDatabase.connect();
+  await GetStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }

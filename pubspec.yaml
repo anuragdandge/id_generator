@@ -40,7 +40,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   mobile_scanner: ^3.4.1
   uuid: ^3.0.0
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.1
   get: ^4.6.5
   firebase_core: ^2.16.0
   cloud_firestore: ^4.9.2
@@ -48,6 +48,7 @@ dependencies:
   mongo_dart: ^0.9.3
   connectivity: ^3.0.6
   flutter_svg: ^2.0.7
+  get_storage: ^2.1.1
 
 
 dev_dependencies:

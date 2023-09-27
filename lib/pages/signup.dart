@@ -55,9 +55,9 @@ class _SignupState extends State<Signup> {
 
   //A function that validate user entered password
   bool validatePassword(String pass) {
-    String _password = pass.trim();
+    String password = pass.trim();
 
-    if (passValid.hasMatch(_password)) {
+    if (passValid.hasMatch(password)) {
       return true;
     } else {
       return false;
@@ -66,9 +66,9 @@ class _SignupState extends State<Signup> {
 
   //A function that validate user entered Full Name
   bool validateFullName(String name) {
-    String _fullName = name.trim();
+    String fullName = name.trim();
 
-    if (fullNameValid.hasMatch(_fullName)) {
+    if (fullNameValid.hasMatch(fullName)) {
       return true;
     } else {
       return false;
@@ -459,8 +459,8 @@ class _SignupState extends State<Signup> {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.camera_alt),
-                    SizedBox(width: 20),
+                    const Icon(Icons.camera_alt),
+                    const SizedBox(width: 20),
                     Text("Camera ",
                         style: TextStyle(color: Colors.deepPurple[400])),
                   ],
@@ -482,8 +482,8 @@ class _SignupState extends State<Signup> {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.upload_file),
-                    SizedBox(width: 20),
+                    const Icon(Icons.upload_file),
+                    const SizedBox(width: 20),
                     Text("Gallery ",
                         style: TextStyle(color: Colors.deepPurple[400]))
                   ],
@@ -550,12 +550,12 @@ class _SignupState extends State<Signup> {
                 'localaddress': localAddress.text,
                 'rollnumber': rollNumber.text,
               });
-              CollectionReference credRef =
-                  FirebaseFirestore.instance.collection('credentials');
-              credRef.add({
-                'phonenumber': phoneController.text,
-                'password': password.text
-              });
+              // CollectionReference credRef =
+              //     FirebaseFirestore.instance.collection('credentials');
+              // credRef.add({
+              //   'phonenumber': phoneController.text,
+              //   'password': password.text
+              // });
             }
             // _signup();
             uploadImage();
@@ -736,7 +736,7 @@ class _SignupState extends State<Signup> {
                 ],
               )));
     } else {
-      var firebaseStorage = FirebaseStorage.instance.ref("$uuid");
+      var firebaseStorage = FirebaseStorage.instance.ref(uuid);
       await firebaseStorage.putFile(_selectedImage!);
     }
     // var url = firebaseStorage.getDownloadURL();

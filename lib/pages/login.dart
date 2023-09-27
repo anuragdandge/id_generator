@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
+import 'package:id_generator/features/authentication_login.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/pages/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -26,9 +28,9 @@ class _LoginState extends State<Login> {
   RegExp phoneValid = RegExp(r"^\+?[0-9]{10,12}$");
 
   bool validatePassword(String pass) {
-    String _password = pass.trim();
+    String password = pass.trim();
 
-    if (passValid.hasMatch(_password)) {
+    if (passValid.hasMatch(password)) {
       return true;
     } else {
       return false;
@@ -36,9 +38,9 @@ class _LoginState extends State<Login> {
   }
 
   bool validatePhoneNumber(String phone) {
-    String _phoneNumber = phone.trim();
+    String phoneNumber = phone.trim();
 
-    if (phoneValid.hasMatch(_phoneNumber)) {
+    if (phoneValid.hasMatch(phoneNumber)) {
       return true;
     } else {
       return false;
@@ -248,25 +250,8 @@ class _LoginState extends State<Login> {
           if (_formKey.currentState!.validate()) {
             debugPrint("Email ${phoneController.text}");
             debugPrint("Password ${passwordController.text}");
-            // you'd often call a server or save the information in a database.
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(content: Text('Processing Data')),
-            // );
-            final snap = await checkCredentials();
-            final docs =
-                snap.docs.map((doc) => doc.data().toString()).join('\n');
-            if (docs.isEmpty) {
-              // ignore: use_build_context_synchronously
-              showDialog(
-                  context: context,
-                  builder: (context) => const AlertDialog(
-                        title: Text("No Creds Found"),
-                      ));
-              debugPrint("No Creds Found  ");
-            } else {
-              debugPrint(docs);
-              Get.to(GenerateQR(data: "$phoneController.text"));
-            }
+            MongoDatabase()
+                .checkCreds(phoneController.text, passwordController.text);
           } else {
             shakeKey.currentState?.shake();
           }
@@ -304,14 +289,5 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
-  }
-
-  Future<QuerySnapshot> checkCredentials() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('credentials')
-        .where('phonenumber', isEqualTo: phoneController.text)
-        .where('passsword', isEqualTo: passwordController.text)
-        .get();
-    return snapshot;
   }
 }
