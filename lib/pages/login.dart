@@ -1,12 +1,12 @@
 // import 'package:mongo_dart/mongo_dart.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
-import 'package:id_generator/features/authentication_login.dart';
-import 'package:id_generator/features/generate_qr_code.dart';
+import 'package:id_generator/features/authentication/screens/otp_screen.dart';
 import 'package:id_generator/pages/signup.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:id_generator/src/repository/authentication_repository/authentication_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -46,6 +46,8 @@ class _LoginState extends State<Login> {
       return false;
     }
   }
+
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +125,8 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
-                    maxLength: 10,
-                    keyboardType: TextInputType.phone,
+                    // maxLength: 10,
+                    // keyboardType: TextInputType.phone,
                     controller: phoneController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -134,47 +136,47 @@ class _LoginState extends State<Login> {
                           Icons.phone,
                           color: Colors.deepPurple,
                         )),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Phone Number ';
-                      } else {
-                        bool result = validatePhoneNumber(value);
-                        if (result) {
-                          return null;
-                        } else {
-                          return "Enter Proper Number";
-                        }
-                      }
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter Phone Number ';
+                    //   } else {
+                    //     bool result = validatePhoneNumber(value);
+                    //     if (result) {
+                    //       return null;
+                    //     } else {
+                    //       return "Enter Proper Number";
+                    //     }
+                    //   }
+                    // },
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  TextFormField(
-                    maxLength: 12,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Enter Password ';
-                      } else {
-                        bool result = validatePassword(value);
-                        if (result) {
-                          return null;
-                        } else {
-                          return " Password should contain Capital, small letter & Number & Special";
-                        }
-                      }
-                    },
-                    keyboardType: TextInputType.visiblePassword,
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Abc#123",
-                        label: Text("Password "),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.deepPurple,
-                        )),
-                  ),
+                  // TextFormField(
+                  //   maxLength: 12,
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Please Enter Password ';
+                  //     } else {
+                  //       bool result = validatePassword(value);
+                  //       if (result) {
+                  //         return null;
+                  //       } else {
+                  //         return " Password should contain Capital, small letter & Number & Special";
+                  //       }
+                  //     }
+                  //   },
+                  //   keyboardType: TextInputType.visiblePassword,
+                  //   controller: passwordController,
+                  //   decoration: const InputDecoration(
+                  //       border: OutlineInputBorder(),
+                  //       hintText: "Abc#123",
+                  //       label: Text("Password "),
+                  //       prefixIcon: Icon(
+                  //         Icons.lock,
+                  //         color: Colors.deepPurple,
+                  //       )),
+                  // ),
                 ],
               )),
           const SizedBox(
@@ -250,8 +252,11 @@ class _LoginState extends State<Login> {
           if (_formKey.currentState!.validate()) {
             debugPrint("Email ${phoneController.text}");
             debugPrint("Password ${passwordController.text}");
-            MongoDatabase()
-                .checkCreds(phoneController.text, passwordController.text);
+            // MongoDatabase()
+            //     .checkCreds(phoneController.text, passwordController.text);
+            AuthenticationRepository()
+                .phoneAuthentication(phoneController.text.trim());
+            Get.to(() => const OTPScreen());
           } else {
             shakeKey.currentState?.shake();
           }

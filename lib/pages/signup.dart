@@ -3,7 +3,7 @@ import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:id_generator/pages/login.dart';
-import 'package:id_generator/pages/student_home.dart';
+import 'package:id_generator/pages/student_qr.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';

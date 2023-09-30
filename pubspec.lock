@@ -233,6 +233,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
+  firebase_auth:
+    dependency: "direct main"
+    description:
+      name: firebase_auth
+      sha256: e7b7e2a08888cb8ef073a9b6d4df9039ea0ff07c920d4258fb4886c55fe2dbb6
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.10.0"
+  firebase_auth_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_auth_platform_interface
+      sha256: "4862bd649268e32ebd685a58abe1eb7ef13aef3f668ce9c56a7d283c971ec6ff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.19.0"
+  firebase_auth_web:
+    dependency: transitive
+    description:
+      name: firebase_auth_web
+      sha256: "090d531cc0dcf1e39edc0d64cffa18ccc5745b1fd1081a13ee1bf42d861ff764"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.8.1"
   firebase_core:
     dependency: "direct main"
     description:
@@ -310,6 +334,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_otp_text_field:
+    dependency: "direct main"
+    description:
+      name: flutter_otp_text_field
+      sha256: c9164ba391071fb9783698256ddbb9efc960cfed056d843db164711c65b1b114
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -488,6 +520,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  mac_address:
+    dependency: "direct main"
+    description:
+      name: mac_address
+      sha256: "630aca295b6c525c1f79d38c8669a65aa06a3e9ff870f73780a8d9694ba789ff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   matcher:
     dependency: transitive
     description:

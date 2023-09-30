@@ -2,11 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:id_generator/constants.dart';
-import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'dart:io' show Platform;
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MongoDatabase {
   static var db, credsCollection;
