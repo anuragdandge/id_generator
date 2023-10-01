@@ -1,16 +1,11 @@
-// import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
-import 'package:id_generator/features/authentication/screens/otp_screen.dart';
 import 'package:id_generator/pages/signup.dart';
-import 'package:id_generator/src/repository/authentication_repository/authentication_repository.dart';
+import 'package:id_generator/pages/student_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 class Login extends StatefulWidget {
   const Login({super.key});
-
   @override
   State<Login> createState() => _LoginState();
 }
@@ -20,6 +15,8 @@ class _LoginState extends State<Login> {
   late Color myColor;
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController _codeController = TextEditingController();
+  String smsCode = "";
   bool rememberUser = false;
   final _formKey = GlobalKey<FormState>();
   final shakeKey = GlobalKey<ShakeWidgetState>();
@@ -47,7 +44,72 @@ class _LoginState extends State<Login> {
     }
   }
 
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  _signInWithMobileNumber(String phone) async {
+    UserCredential _credentials;
+    User user;
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: phone.trim(),
+          verificationCompleted: (PhoneAuthCredential authCredential) async {
+            await _auth.signInWithCredential(authCredential).then((value) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => StudentHome()));
+            });
+          },
+          verificationFailed: (((error) {
+            print(error);
+          })),
+          codeSent: (String verificationId, [int? forceResendingToken]) {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                      title: Text("Enter OTP"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: _codeController,
+                          )
+                        ],
+                      ),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              FirebaseAuth auth = FirebaseAuth.instance;
+                              smsCode = _codeController.text;
+                              PhoneAuthCredential _credential =
+                                  PhoneAuthProvider.credential(
+                                      verificationId: verificationId,
+                                      smsCode: smsCode);
+                              auth
+                                  .signInWithCredential(_credential)
+                                  .then((value) {
+                                if (value != null) {
+                                  Navigator.pop((context));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Signup()));
+                                }
+                              }).catchError((e) {
+                                print(e);
+                              });
+                            },
+                            child: Text("Submit "))
+                      ],
+                    ));
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            verificationId = verificationId;
+          },
+          timeout: Duration(seconds: 45));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +192,7 @@ class _LoginState extends State<Login> {
                     controller: phoneController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: "9145369999",
+                        hintText: "+919145369970",
                         label: Text(" Phone Number "),
                         prefixIcon: Icon(
                           Icons.phone,
@@ -254,9 +316,10 @@ class _LoginState extends State<Login> {
             debugPrint("Password ${passwordController.text}");
             // MongoDatabase()
             //     .checkCreds(phoneController.text, passwordController.text);
-            AuthenticationRepository()
-                .phoneAuthentication(phoneController.text.trim());
-            Get.to(() => const OTPScreen());
+            // AuthenticationRepository()
+            //     .phoneAuthentication(phoneController.text.trim());
+            // Get.to(() => const OTPScreen());
+            _signInWithMobileNumber(phoneController.text);
           } else {
             shakeKey.currentState?.shake();
           }

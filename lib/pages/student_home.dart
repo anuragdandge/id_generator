@@ -12,6 +12,7 @@ class StudentHome extends StatefulWidget {
 class _StudentHomeState extends State<StudentHome> {
   String _platformVersion = 'Unknown';
 
+  @override
   void initState() {
     super.initState();
     initPlatformState();

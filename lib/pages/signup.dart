@@ -86,35 +86,12 @@ class _SignupState extends State<Signup> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: _buildTop(),
+                child: SignUpWidgets.buildTop(mediaSize),
               ),
               _buildBottom(),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTop() {
-    return SizedBox(
-      width: mediaSize.width,
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.login,
-            size: 100,
-            color: Colors.deepPurple,
-          ),
-          Text(
-            "Register",
-            style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 40,
-                fontWeight: FontWeight.bold),
-          )
-        ],
       ),
     );
   }
@@ -146,7 +123,7 @@ class _SignupState extends State<Signup> {
                 style: TextStyle(
                     color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
               ),
-              SignUpWidgets().buildGreyText("Signup with your Information"),
+              SignUpWidgets.buildGreyText("Signup with your Information"),
               const SizedBox(
                 height: 40,
               ),
@@ -587,7 +564,7 @@ class _SignupState extends State<Signup> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SignUpWidgets().buildGreyText("Already have an account ? "),
+          SignUpWidgets.buildGreyText("Already have an account ? "),
           ElevatedButton(
               style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
