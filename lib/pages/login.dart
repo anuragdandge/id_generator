@@ -116,50 +116,46 @@ class _LoginState extends State<Login> {
     mediaSize = MediaQuery.of(context).size;
     myColor = Theme.of(context).primaryColor;
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(top: 80, child: _buildTop()),
-          Positioned(bottom: 0, child: _buildBottom()),
-        ],
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple[400],
+        title: const Text(
+          "Verify Phone Number ",
+          style: TextStyle(fontSize: 30, color: Colors.white),
+        ),
       ),
+      body: SafeArea(child: _buildBottom()),
     );
   }
 
-  Widget _buildTop() {
-    return SizedBox(
-      width: mediaSize.width,
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.login,
-            size: 100,
-            color: Colors.deepPurple,
-          ),
-          Text(
-            "Login",
-            style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 40,
-                fontWeight: FontWeight.bold),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget _buildTop() {
+  //   return SizedBox(
+  //     width: mediaSize.width,
+  //     child: const Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         Icon(
+  //           Icons.login,
+  //           size: 100,
+  //           color: Colors.deepPurple,
+  //         ),
+  //         Text(
+  //           "Login",
+  //           style: TextStyle(
+  //               color: Colors.deepPurple,
+  //               fontSize: 40,
+  //               fontWeight: FontWeight.bold),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildBottom() {
     return SizedBox(
       width: mediaSize.width,
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: _buildForm(),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: _buildForm(),
       ),
     );
   }
@@ -168,17 +164,9 @@ class _LoginState extends State<Login> {
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "Welcome ",
-            style: TextStyle(
-                color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
-          ),
-          _buildGreyText("Login with your Information "),
-          const SizedBox(
-            height: 60,
-          ),
           ShakeWidget(
               key: shakeKey,
               shakeOffset: 10,
@@ -187,8 +175,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
-                    // maxLength: 10,
-                    // keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.phone,
                     controller: phoneController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -198,18 +185,18 @@ class _LoginState extends State<Login> {
                           Icons.phone,
                           color: Colors.deepPurple,
                         )),
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return 'Please enter Phone Number ';
-                    //   } else {
-                    //     bool result = validatePhoneNumber(value);
-                    //     if (result) {
-                    //       return null;
-                    //     } else {
-                    //       return "Enter Proper Number";
-                    //     }
-                    //   }
-                    // },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Phone Number ';
+                      } else {
+                        bool result = validatePhoneNumber(value);
+                        if (result) {
+                          return null;
+                        } else {
+                          return "Enter Number like +91*****";
+                        }
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 30,
@@ -241,16 +228,10 @@ class _LoginState extends State<Login> {
                   // ),
                 ],
               )),
-          const SizedBox(
-            height: 30,
-          ),
-          _buildRememberForgot(),
-          const SizedBox(
-            height: 30,
-          ),
-          _buildLoginButton(),
-          const SizedBox(height: 30),
-          _buildRegister(),
+
+          Positioned(right: 0, child: _buildLoginButton()),
+
+          // _buildRegister(),
         ],
       ),
     );
@@ -286,26 +267,26 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildRememberForgot() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    rememberUser = value!;
-                  });
-                }),
-            _buildGreyText("Remember me ")
-          ],
-        ),
-        TextButton(onPressed: () {}, child: _buildGreyText("Forgot Password"))
-      ],
-    );
-  }
+  // Widget _buildRememberForgot() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Row(
+  //         children: [
+  //           Checkbox(
+  //               value: rememberUser,
+  //               onChanged: (value) {
+  //                 setState(() {
+  //                   rememberUser = value!;
+  //                 });
+  //               }),
+  //           _buildGreyText("Remember me ")
+  //         ],
+  //       ),
+  //       TextButton(onPressed: () {}, child: _buildGreyText("Forgot Password"))
+  //     ],
+  //   );
+  // }
 
   Widget _buildLoginButton() {
     return ElevatedButton(
@@ -319,43 +300,55 @@ class _LoginState extends State<Login> {
             // AuthenticationRepository()
             //     .phoneAuthentication(phoneController.text.trim());
             // Get.to(() => const OTPScreen());
-            _signInWithMobileNumber(phoneController.text);
+            _signInWithMobileNumber("+91${phoneController.text}");
           } else {
             shakeKey.currentState?.shake();
           }
         },
         style: ElevatedButton.styleFrom(
-            backgroundColor: myColor,
-            shape: const StadiumBorder(),
-            elevation: 20,
-            shadowColor: Colors.deepPurple,
-            minimumSize: const Size.fromHeight(60)),
-        child: const Text(
-          "LOGIN",
-          style: TextStyle(color: Colors.white),
+          backgroundColor: myColor,
+          shape: const StadiumBorder(),
+          elevation: 10,
+          shadowColor: Colors.deepPurple,
+          // minimumSize: const Size.fromHeight(60)
+        ),
+        child: const SizedBox(
+          width: 65,
+          child: Row(
+            children: [
+              Text(
+                "Next ",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              Icon(
+                Icons.arrow_right_outlined,
+                color: Colors.white,
+              )
+            ],
+          ),
         ));
   }
 
-  Widget _buildRegister() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildGreyText("Don't have an account? "),
-          TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Signup()));
-                });
-              },
-              child: const Text(
-                "Register Here ",
-                style: TextStyle(color: Colors.deepPurple),
-              ))
-        ],
-      ),
-    );
-  }
+  // Widget _buildRegister() {
+  //   return Center(
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         _buildGreyText("Don't have an account? "),
+  //         TextButton(
+  //             style: TextButton.styleFrom(padding: EdgeInsets.zero),
+  //             onPressed: () {
+  //               setState(() {
+  //                 Navigator.push(context,
+  //                     MaterialPageRoute(builder: (context) => const Signup()));
+  //               });
+  //             },
+  //             child: const Text(
+  //               "Register Here ",
+  //               style: TextStyle(color: Colors.deepPurple),
+  //             ))
+  //       ],
+  //     ),
+  //   );
+  // }
 }

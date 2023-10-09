@@ -1,4 +1,17 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cSpell.words": [
+        "academicyear",
+        "bloodgroup",
+        "dateofbirth",
+        "emergencynumber",
+        "fullname",
+        "FYMCA",
+        "Ganpatrao",
+        "localaddress",
+        "phonenumber",
+        "rollnumber",
+        "SYMCA"
+    ]
 }

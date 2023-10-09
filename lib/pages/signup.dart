@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously
+// ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously, non_constant_identifier_names
 import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ final List<String> bloodGroups = [
 class _SignupState extends State<Signup> {
   late Size mediaSize;
   late Color myColor;
-  TextEditingController phoneController = TextEditingController();
+  // TextEditingController phoneController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dateOfBirth = TextEditingController();
   TextEditingController academicYear = TextEditingController();
@@ -84,10 +84,10 @@ class _SignupState extends State<Signup> {
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SignUpWidgets.buildTop(mediaSize),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: SignUpWidgets.buildTop(mediaSize),
+              // ),
               _buildBottom(),
             ],
           ),
@@ -208,7 +208,7 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
                 keyboardType: TextInputType.phone,
-                controller: phoneController,
+                // controller: phoneController,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "9145369999",
@@ -499,7 +499,7 @@ class _SignupState extends State<Signup> {
               debugPrint("Entered Full Name  :  ${fullNameController.text}");
               debugPrint("DOB  :  ${dateOfBirth.text}");
               debugPrint("AY  :  ${academicYear.text}");
-              debugPrint("Phone Number   :  ${phoneController.text}");
+              // debugPrint("Phone Number   :  ${phoneController.text}");
               debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
               debugPrint("local Address   :  ${localAddress.text}");
               debugPrint("Roll Number   :  ${rollNumber.text}");
@@ -515,7 +515,7 @@ class _SignupState extends State<Signup> {
               collRef.add({
                 'fullname': fullNameController.text,
                 'uuid': uuid,
-                'phonenumber': phoneController.text,
+                // 'phonenumber': phoneController.text,
                 'password': password.text,
                 'emergencynumber': emergencyNumber.text,
                 'division': _selectedDivision,
@@ -542,7 +542,7 @@ class _SignupState extends State<Signup> {
                 data: uuid,
                 file: _selectedImage!,
                 name: fullNameController.text,
-                phone: phoneController.text,
+                phone: "phoneController.text",
               ));
             });
           }
@@ -716,7 +716,5 @@ class _SignupState extends State<Signup> {
       var firebaseStorage = FirebaseStorage.instance.ref(uuid);
       await firebaseStorage.putFile(_selectedImage!);
     }
-    // var url = firebaseStorage.getDownloadURL();
-    // debugPrint("$url");
   }
 }
