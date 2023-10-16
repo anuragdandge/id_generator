@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/pages/login.dart';
+import 'package:id_generator/pages/verify_otp.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class StudentQR extends StatelessWidget {
@@ -86,7 +86,9 @@ class StudentQR extends StatelessWidget {
                   ],
                 ),
               ),
-              TextButton(onPressed: () => Get.to(const Login()), child: const Text("Login"))
+              TextButton(
+                  onPressed: () => Get.to(const Login()),
+                  child: const Text("Login"))
             ],
           ),
         ),

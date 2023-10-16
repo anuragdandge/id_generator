@@ -52,6 +52,9 @@ dependencies:
   firebase_auth: ^4.10.0
   flutter_otp_text_field: ^1.1.1
   mac_address: ^1.0.0
+  pinput: ^3.0.1
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
   
 
 

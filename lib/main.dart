@@ -3,14 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:id_generator/features/authentication/checklocation.dart';
+import 'package:id_generator/features/authentication/screens/qr_scanner.dart';
 import 'package:id_generator/features/authentication_login.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:mac_address/mac_address.dart';
 import 'package:id_generator/firebase_options.dart';
-import 'package:id_generator/pages/login.dart';
+import 'package:id_generator/pages/verify_otp.dart';
 import 'package:id_generator/pages/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:id_generator/features/authentication/screens/otp_screen.dart';
 // import 'package:id_generator/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:id_generator/pages/student_home.dart';
 
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Login(),
+      home: CheckLocation(),
     );
   }
 }
