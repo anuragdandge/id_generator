@@ -23,3 +23,5 @@ samples, guidance on mobile development, and a full API reference.
 - [x] Home Screen
 - [x] Profile Screen
 - [x] StudentHome
+- [x] Verify Phone Number Screen 
+- [x] OTP functionality For Phone Authentication
