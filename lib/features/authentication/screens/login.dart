@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/pages/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -210,28 +211,37 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () async {
-          // If the form is valid, display a snackbar. In the real world,
           if (_formKey.currentState!.validate()) {
-            debugPrint("Email ${phoneController.text}");
-            debugPrint("Password ${passwordController.text}");
-            // you'd often call a server or save the information in a database.
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(content: Text('Processing Data')),
-            // );
-            final snap = await checkCredentials();
-            final docs =
-                snap.docs.map((doc) => doc.data().toString()).join('\n');
-            if (docs.isEmpty) {
-              // ignore: use_build_context_synchronously
-              showDialog(
-                  context: context,
-                  builder: (context) => const AlertDialog(
-                        title: Text("No Creds Found"),
-                      ));
-              debugPrint("No Creds Found  ");
+            final snapshot = await checkCredentials();
+            if (snapshot.docs.isNotEmpty) {
+              for (QueryDocumentSnapshot document in snapshot.docs) {
+                Map<String, dynamic> data =
+                    document.data() as Map<String, dynamic>;
+                String password = data['password'];
+                if (passwordController.text == password) {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool('isLoggedIn', true);
+                  debugPrint("Sharedpreference Set !");
+                  Get.to(GenerateQR(data: "$phoneController.text"));
+                } else {
+                  // ignore: use_build_context_synchronously
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AlertDialog(
+                      title: Text("Password Not Matched "),
+                    ),
+                  );
+                }
+              }
             } else {
-              debugPrint(docs);
-              Get.to(GenerateQR(data: "$phoneController.text"));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Phone Number does not exist '),
+                  duration:
+                      Duration(seconds: 2), // Adjust the duration as needed
+                ),
+              );
             }
           } else {
             shakeKey.currentState?.shake();
@@ -276,7 +286,6 @@ class _LoginScreenState extends State<LoginScreen> {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('credentials')
         .where('phonenumber', isEqualTo: phoneController.text)
-        .where('passsword', isEqualTo: passwordController.text)
         .get();
     return snapshot;
   }

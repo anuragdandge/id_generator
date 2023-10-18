@@ -1,6 +1,11 @@
 // ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously, non_constant_identifier_names
+import 'dart:convert';
+
+import 'package:id_generator/features/authentication/controllers/encryption.dart';
+
 import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:id_generator/pages/student_qr.dart';
@@ -208,7 +213,7 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
                 keyboardType: TextInputType.phone,
-                // controller: phoneController,
+                controller: phoneController,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "9145369999",
@@ -499,7 +504,7 @@ class _SignupState extends State<Signup> {
               debugPrint("Entered Full Name  :  ${fullNameController.text}");
               debugPrint("DOB  :  ${dateOfBirth.text}");
               debugPrint("AY  :  ${academicYear.text}");
-              // debugPrint("Phone Number   :  ${phoneController.text}");
+              debugPrint("Phone Number   :  ${phoneController.text}");
               debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
               debugPrint("local Address   :  ${localAddress.text}");
               debugPrint("Roll Number   :  ${rollNumber.text}");
@@ -507,16 +512,18 @@ class _SignupState extends State<Signup> {
               debugPrint("Selected Gender:  $_selectedGender");
               debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
               debugPrint("Passport Photo Location:  $_selectedImage");
-              debugPrint("Password:  ${password.text}");
               _generateNewUuid();
 
               CollectionReference collRef =
                   FirebaseFirestore.instance.collection('students');
+              // var hashedPass = EncryptData.encryptAES(password.text, uuid);
+              // debugPrint("Password:  ${hashedPass?.base64}");
               collRef.add({
                 'fullname': fullNameController.text,
                 'uuid': uuid,
-                // 'phonenumber': phoneController.text,
+                'phonenumber': phoneController.text,
                 'password': password.text,
+                // 'password': hashedPass?.base64,
                 'emergencynumber': emergencyNumber.text,
                 'division': _selectedDivision,
                 'bloodgroup': _selectedBloodGroup,
@@ -531,7 +538,9 @@ class _SignupState extends State<Signup> {
                   FirebaseFirestore.instance.collection('credentials');
               credRef.add({
                 'phonenumber': phoneController.text,
-                'password': password.text
+                'password': password.text,
+                // 'password': hashedPass?.base64,
+                'uuid': uuid,
               });
             }
             // _signup();

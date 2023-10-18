@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:id_generator/features/authentication/screens/adminHome.dart';
+import 'package:id_generator/features/authentication/screens/login.dart';
 import './features/authentication/checklocation.dart';
 import './features/authentication/screens/qr_scanner.dart';
 import './features/authentication_login.dart';
