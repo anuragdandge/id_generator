@@ -32,7 +32,7 @@ final List<String> bloodGroups = [
 class _SignupState extends State<Signup> {
   late Size mediaSize;
   late Color myColor;
-  // TextEditingController phoneController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dateOfBirth = TextEditingController();
   TextEditingController academicYear = TextEditingController();
@@ -527,12 +527,12 @@ class _SignupState extends State<Signup> {
                 'localaddress': localAddress.text,
                 'rollnumber': rollNumber.text,
               });
-              // CollectionReference credRef =
-              //     FirebaseFirestore.instance.collection('credentials');
-              // credRef.add({
-              //   'phonenumber': phoneController.text,
-              //   'password': password.text
-              // });
+              CollectionReference credRef =
+                  FirebaseFirestore.instance.collection('credentials');
+              credRef.add({
+                'phonenumber': phoneController.text,
+                'password': password.text
+              });
             }
             // _signup();
             uploadImage();

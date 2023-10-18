@@ -43,8 +43,12 @@ class _CheckLocationState extends State<CheckLocation> {
   }
 
   _checkDistance() {
-    double dis = Geolocator.distanceBetween(_currentLocation!.latitude,
-        _currentLocation!.longitude, 18.5050084, 73.8123033);
+    double dis = Geolocator.distanceBetween(
+        _currentLocation!.latitude,
+        // _currentLocation!.longitude, 18.5050084, 73.8123033);
+        _currentLocation!.longitude,
+        18.525713,
+        73.845745);
     setState(() {
       distance = dis;
     });
