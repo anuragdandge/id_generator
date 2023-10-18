@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../controllers/encryption.dart';
+
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
 
@@ -10,9 +12,6 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        body: Center(
-      child: Text("Admin Home"),
-    ));
+    return Scaffold(body: Center(child: Text("Welcome")));
   }
 }
