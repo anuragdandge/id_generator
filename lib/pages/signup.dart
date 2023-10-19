@@ -581,8 +581,7 @@ class _SignupState extends State<Signup> {
                   elevation: 0.0),
               onPressed: () {
                 setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+                  Get.to(() => const VerifyPhoneScreen());
                 });
               },
               child: const Text(

@@ -87,7 +87,7 @@ class StudentQR extends StatelessWidget {
                 ),
               ),
               TextButton(
-                  onPressed: () => Get.to(const Login()),
+                  onPressed: () => Get.to(const VerifyPhoneScreen()),
                   child: const Text("Login"))
             ],
           ),
