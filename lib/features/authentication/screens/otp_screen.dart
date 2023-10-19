@@ -30,9 +30,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             onSubmitted: (value) {
-              setState(() {
-                var otpCode = value;
-              });
+              setState(() {});
             },
           )
         ],
