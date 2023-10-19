@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/signup.dart';
@@ -56,7 +58,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      StudentHome(),
+                      const StudentHome(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     return SlideTransition(
@@ -72,7 +74,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             });
           },
           verificationFailed: (((error) {
-            print("Verification Failed  ${error}");
+            print("Verification Failed  $error");
             debugPrint("verificationFailed !!! ");
           })),
           codeSent: (String verificationId, [int? forceResendingToken]) {
@@ -82,7 +84,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 context: context,
                 barrierDismissible: false,
                 builder: (context) => AlertDialog(
-                      title: Text("Enter OTP"),
+                      title: const Text("Enter OTP"),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -102,25 +104,26 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                             onPressed: () {
                               FirebaseAuth auth = FirebaseAuth.instance;
                               smsCode = _codeController.text;
-                              PhoneAuthCredential _credential =
+                              PhoneAuthCredential credential =
                                   PhoneAuthProvider.credential(
                                       verificationId: verificationId,
                                       smsCode: smsCode);
                               auth
-                                  .signInWithCredential(_credential)
+                                  .signInWithCredential(credential)
                                   .then((value) {
                                 if (value != null) {
                                   Navigator.pop((context));
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Signup()));
+                                          builder: (context) =>
+                                              const Signup()));
                                 }
                               }).catchError((e) {
                                 print(e);
                               });
                             },
-                            child: Text("Submit "))
+                            child: const Text("Submit "))
                       ],
                     ));
           },
@@ -128,7 +131,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             verificationId = verificationId;
             debugPrint("CodeAutoRetrieval...");
           },
-          timeout: Duration(seconds: 45));
+          timeout: const Duration(seconds: 45));
     } catch (e) {
       print(e);
     }
@@ -138,15 +141,107 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
     myColor = Theme.of(context).primaryColor;
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     backgroundColor: Colors.deepPurple[400],
+    //     title: const Text(
+    //       "Verify Phone Number ",
+    //       style: TextStyle(fontSize: 30, color: Colors.white),
+    //     ),
+    //   ),
+    //   body: SafeArea(child: _buildBottom()),
+    // );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[400],
         title: const Text(
-          "Verify Phone Number ",
+          "Verify Phone Number",
           style: TextStyle(fontSize: 30, color: Colors.white),
         ),
       ),
-      body: SafeArea(child: _buildBottom()),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ShakeWidget(
+                  key: shakeKey,
+                  shakeOffset: 10,
+                  shakeCount: 3,
+                  shakeDuration: const Duration(milliseconds: 500),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.phone,
+                        controller: phoneController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "9145369970",
+                          labelText: "Phone Number",
+                          prefixIcon: Icon(
+                            Icons.phone,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Phone Number';
+                          } else {
+                            bool result = validatePhoneNumber(value);
+                            if (result) {
+                              return null;
+                            } else {
+                              return "Enter Number like +91*****";
+                            }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _verifyPhoneNumber("+91${phoneController.text}");
+                        } else {
+                          shakeKey.currentState?.shake();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(110, 30),
+                        backgroundColor: myColor,
+                        shape: const StadiumBorder(),
+                        elevation: 10,
+                        shadowColor: Colors.deepPurple,
+                      ),
+                      child: const Row(
+                        children: [
+                          Text(
+                            "Next",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          Icon(
+                            Icons.arrow_right_outlined,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -206,36 +301,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
           Positioned(right: 0, child: _buildLoginButton()),
         ],
       ),
-    );
-  }
-
-  Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.grey),
-    );
-  }
-
-  Widget _buildInputField(
-      TextEditingController controller, String label, int ml, TextInputType tit,
-      {isPassword = false}) {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please Provide Credential  ';
-        }
-        return null;
-      },
-      controller: controller,
-      maxLength: 10,
-      keyboardType: tit,
-      decoration: InputDecoration(
-          suffixIcon: isPassword
-              ? const Icon(Icons.remove_red_eye)
-              : const Icon(Icons.done),
-          border: const OutlineInputBorder(),
-          label: Text(label)),
-      obscureText: isPassword,
     );
   }
 
