@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/features/authentication/screens/login.dart';
+import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 
 import 'package:lottie/lottie.dart';
