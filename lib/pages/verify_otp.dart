@@ -75,6 +75,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                         children: [
                           TextFormField(
                             controller: _codeController,
+                            keyboardType: TextInputType.number
                           )
                         ],
                       ),

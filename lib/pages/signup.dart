@@ -545,18 +545,32 @@ class _SignupState extends State<Signup> {
               });
             }
             // _signup();
-            uploadImage();
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setBool('isLoggedIn', true);
             setState(() {
-              Navigator.pop(context);
-              Get.to(() => StudentQR(
-                    data: uuid,
-                    file: _selectedImage!,
-                    name: fullNameController.text,
-                    phone: widget.phoneNo,
-                  ));
+              // Navigator.pop(context);
+              if (_selectedImage == null) {
+                showDialog(
+                    context: context,
+                    builder: ((context) => AlertDialog(
+                          title: const Text("Select Profile Photo "),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Close"))
+                          ],
+                        )));
+              } else {
+                uploadImage();
+                Navigator.pop(context);
+                Get.to(() => StudentQR(
+                      data: uuid,
+                      file: _selectedImage!,
+                      name: fullNameController.text,
+                      phone: widget.phoneNo,
+                    ));
+              }
             });
           }
         },

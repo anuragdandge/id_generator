@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:id_generator/features/authentication/screens/login.dart';
+import 'package:id_generator/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GetStarted extends StatelessWidget {
