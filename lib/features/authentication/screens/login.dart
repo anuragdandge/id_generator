@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/pages/signup.dart';
+import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -266,17 +267,23 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           _buildGreyText("Don't have an account? "),
           TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Signup()));
-                });
-              },
-              child: const Text(
-                "Register Here ",
-                style: TextStyle(color: Colors.deepPurple),
-              ))
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () {
+              setState(() {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const VerifyPhoneScreen(),
+                //   ),
+                // );
+                Get.to(() => const VerifyPhoneScreen());
+              });
+            },
+            child: const Text(
+              "Register Here ",
+              style: TextStyle(color: Colors.deepPurple),
+            ),
+          )
         ],
       ),
     );
