@@ -8,6 +8,8 @@ import 'package:id_generator/pages/verify_otp.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'getStarted.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -36,7 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     print("Is User Already Logged in :  $isLoggedIn");
-    Get.to(() => isLoggedIn ? const VerifyPhoneScreen() : const LoginScreen());
+    Navigator.pop(context);
+    Get.to(() => isLoggedIn ? const GetStarted() : const LoginScreen());
   }
 
   initScreen(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
+import 'package:id_generator/features/authentication/screens/getStarted.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -178,8 +179,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', true);
-                  debugPrint("Sharedpreference Set !");
-                  Get.to(GenerateQR(data: "$phoneController.text"));
+                  debugPrint(" User Logged In !!!");
+                  Navigator.pop(context);
+                  Get.to(() => const GetStarted());
                 } else {
                   // ignore: use_build_context_synchronously
                   showDialog(
