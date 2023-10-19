@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:id_generator/features/authentication/screens/login.dart';
-import 'package:id_generator/pages/student_home.dart';
+import 'package:id_generator/pages/verify_otp.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'getStarted.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,14 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
   route() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    print(isLoggedIn);
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => isLoggedIn ? StudentHome() : LoginScreen(),
-      ),
-    );
+    print("Is User Already Logged in :  $isLoggedIn");
+    Navigator.pop(context);
+    Get.to(() => isLoggedIn ? const GetStarted() : const LoginScreen());
   }
 
   initScreen(BuildContext context) {

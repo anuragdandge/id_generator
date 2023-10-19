@@ -2,10 +2,11 @@
 import 'dart:convert';
 
 import 'package:id_generator/features/authentication/controllers/encryption.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widgets/signUpWidgets.dart';
 import 'dart:io';
-import 'package:encrypt/encrypt.dart';
+// import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:id_generator/pages/student_qr.dart';
@@ -17,8 +18,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signup extends StatefulWidget {
-  const Signup({super.key});
-
+  const Signup({super.key, required this.phoneNo});
+  final String phoneNo;
   @override
   State<Signup> createState() => _SignupState();
 }
@@ -37,7 +38,7 @@ final List<String> bloodGroups = [
 class _SignupState extends State<Signup> {
   late Size mediaSize;
   late Color myColor;
-  TextEditingController phoneController = TextEditingController();
+  // TextEditingController phoneController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dateOfBirth = TextEditingController();
   TextEditingController academicYear = TextEditingController();
@@ -204,25 +205,25 @@ class _SignupState extends State<Signup> {
                     )),
               ),
               const SizedBox(height: 10),
-              TextFormField(
-                maxLength: 10,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Phone Number ';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.phone,
-                controller: phoneController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "9145369999",
-                    label: Text(" Phone Number "),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: Colors.deepPurple,
-                    )),
-              ),
+              // TextFormField(
+              //   maxLength: 10,
+              //   validator: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return 'Please enter Phone Number ';
+              //     }
+              //     return null;
+              //   },
+              //   keyboardType: TextInputType.phone,
+              //   controller: phoneController,
+              //   decoration: const InputDecoration(
+              //       border: OutlineInputBorder(),
+              //       hintText: "9145369999",
+              //       label: Text(" Phone Number "),
+              //       prefixIcon: Icon(
+              //         Icons.phone,
+              //         color: Colors.deepPurple,
+              //       )),
+              // ),
               const SizedBox(height: 10),
               TextFormField(
                 maxLength: 10,
@@ -504,7 +505,7 @@ class _SignupState extends State<Signup> {
               debugPrint("Entered Full Name  :  ${fullNameController.text}");
               debugPrint("DOB  :  ${dateOfBirth.text}");
               debugPrint("AY  :  ${academicYear.text}");
-              debugPrint("Phone Number   :  ${phoneController.text}");
+              debugPrint("Phone Number   :  ${widget.phoneNo}");
               debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
               debugPrint("local Address   :  ${localAddress.text}");
               debugPrint("Roll Number   :  ${rollNumber.text}");
@@ -521,7 +522,7 @@ class _SignupState extends State<Signup> {
               collRef.add({
                 'fullname': fullNameController.text,
                 'uuid': uuid,
-                'phonenumber': phoneController.text,
+                'phonenumber': widget.phoneNo,
                 'password': password.text,
                 // 'password': hashedPass?.base64,
                 'emergencynumber': emergencyNumber.text,
@@ -537,7 +538,7 @@ class _SignupState extends State<Signup> {
               CollectionReference credRef =
                   FirebaseFirestore.instance.collection('credentials');
               credRef.add({
-                'phonenumber': phoneController.text,
+                'phonenumber': widget.phoneNo.substring(3),
                 'password': password.text,
                 // 'password': hashedPass?.base64,
                 'uuid': uuid,
@@ -545,14 +546,17 @@ class _SignupState extends State<Signup> {
             }
             // _signup();
             uploadImage();
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            await prefs.setBool('isLoggedIn', true);
             setState(() {
               Navigator.pop(context);
-              Get.to(StudentQR(
-                data: uuid,
-                file: _selectedImage!,
-                name: fullNameController.text,
-                phone: "phoneController.text",
-              ));
+              Get.to(() => StudentQR(
+                    data: uuid,
+                    file: _selectedImage!,
+                    name: fullNameController.text,
+                    phone: widget.phoneNo,
+                  ));
             });
           }
         },
@@ -581,8 +585,7 @@ class _SignupState extends State<Signup> {
                   elevation: 0.0),
               onPressed: () {
                 setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+                  Get.to(() => const VerifyPhoneScreen());
                 });
               },
               child: const Text(

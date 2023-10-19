@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
 
-import '../controllers/encryption.dart';
+import 'package:flutter/material.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -12,6 +12,6 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Welcome")));
+    return const Scaffold(body: Center(child: Text("Welcome")));
   }
 }

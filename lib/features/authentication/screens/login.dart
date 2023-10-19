@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
+import 'package:id_generator/features/authentication/screens/getStarted.dart';
 import 'package:id_generator/features/generate_qr_code.dart';
-import 'package:id_generator/pages/signup.dart';
+import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -27,9 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   RegExp phoneValid = RegExp(r"^\+?[0-9]{10,12}$");
 
   bool validatePassword(String pass) {
-    String _password = pass.trim();
+    String password = pass.trim();
 
-    if (passValid.hasMatch(_password)) {
+    if (passValid.hasMatch(password)) {
       return true;
     } else {
       return false;
@@ -37,9 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool validatePhoneNumber(String phone) {
-    String _phoneNumber = phone.trim();
+    String phoneNumber = phone.trim();
 
-    if (phoneValid.hasMatch(_phoneNumber)) {
+    if (phoneValid.hasMatch(phoneNumber)) {
       return true;
     } else {
       return false;
@@ -164,50 +165,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildInputField(
-      TextEditingController controller, String label, int ml, TextInputType tit,
-      {isPassword = false}) {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please Provide Credential  ';
-        }
-        return null;
-      },
-      controller: controller,
-      maxLength: 10,
-      keyboardType: tit,
-      decoration: InputDecoration(
-          suffixIcon: isPassword
-              ? const Icon(Icons.remove_red_eye)
-              : const Icon(Icons.done),
-          border: const OutlineInputBorder(),
-          label: Text(label)),
-      obscureText: isPassword,
-    );
-  }
-
-  Widget _buildRememberForgot() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    rememberUser = value!;
-                  });
-                }),
-            _buildGreyText("Remember me ")
-          ],
-        ),
-        TextButton(onPressed: () {}, child: _buildGreyText("Forgot Password"))
-      ],
-    );
-  }
-
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () async {
@@ -222,8 +179,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', true);
-                  debugPrint("Sharedpreference Set !");
-                  Get.to(GenerateQR(data: "$phoneController.text"));
+                  debugPrint(" User Logged In !!!");
+                  Navigator.pop(context);
+                  Get.to(() => const GetStarted());
                 } else {
                   // ignore: use_build_context_synchronously
                   showDialog(
@@ -235,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               }
             } else {
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Phone Number does not exist '),
@@ -266,17 +225,17 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           _buildGreyText("Don't have an account? "),
           TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Signup()));
-                });
-              },
-              child: const Text(
-                "Register Here ",
-                style: TextStyle(color: Colors.deepPurple),
-              ))
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () {
+              setState(() {
+                Get.to(() => const VerifyPhoneScreen());
+              });
+            },
+            child: const Text(
+              "Register Here ",
+              style: TextStyle(color: Colors.deepPurple),
+            ),
+          )
         ],
       ),
     );

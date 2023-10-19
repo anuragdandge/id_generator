@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../features/authentication/screens/login.dart';
 
 class StudentQR extends StatelessWidget {
   final String data;
@@ -87,8 +90,14 @@ class StudentQR extends StatelessWidget {
                 ),
               ),
               TextButton(
-                  onPressed: () => Get.to(const Login()),
-                  child: const Text("Login"))
+                  onPressed: () async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setBool('isLoggedIn', false);
+                    debugPrint("User Logged Out ");
+                    () => Get.to(() => const LoginScreen());
+                  },
+                  child: const Text("Logout"))
             ],
           ),
         ),
