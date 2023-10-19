@@ -270,12 +270,6 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: () {
               setState(() {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const VerifyPhoneScreen(),
-                //   ),
-                // );
                 Get.to(() => const VerifyPhoneScreen());
               });
             },
