@@ -27,7 +27,7 @@ class GetStarted extends StatelessWidget {
                 icon: const Icon(Icons.logout)),
           ),
         ],
-        title: const Text("Getting Started "),
+        title: const Text("Welcome  "),
       ),
     );
   }

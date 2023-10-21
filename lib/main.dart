@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:id_generator/pages/adminHome.dart';
 import 'package:id_generator/pages/login.dart';
+import 'package:id_generator/pages/student_qr.dart';
 import 'pages/checklocation.dart';
 import 'pages/qr_scanner.dart';
 import 'pages/authentication_login.dart';
@@ -22,10 +23,8 @@ import 'pages/splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await MongoDatabase.connect();
   await GetStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // .then((value) => Get.put(AuthenticationRepository()));
   runApp(const MyApp());
 }
 

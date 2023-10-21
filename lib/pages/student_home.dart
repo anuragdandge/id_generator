@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:mac_address/mac_address.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login.dart';
 
 class StudentHome extends StatefulWidget {
   const StudentHome({super.key});
@@ -11,6 +15,9 @@ class StudentHome extends StatefulWidget {
 
 class _StudentHomeState extends State<StudentHome> {
   String _platformVersion = 'Unknown';
+  String uuid = '';
+  String name = '';
+  String phone = '';
 
   @override
   void initState() {
@@ -37,10 +44,52 @@ class _StudentHomeState extends State<StudentHome> {
     });
   }
 
+  void getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    debugPrint(prefs.getString("uuid"));
+    debugPrint(prefs.getString("phone"));
+    debugPrint(prefs.getString("name"));
+    setState(() {
+      uuid = prefs.getString("uuid")!;
+      phone = prefs.getString("phone")!;
+      name = prefs.getString("name")!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text(" Welcome  MAC Address = $_platformVersion")),
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: IconButton(
+                onPressed: () async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool('isLoggedIn', false);
+                  Navigator.pop(context);
+                  debugPrint(" User Logged Out !!!");
+                  Get.to(() => const LoginScreen());
+                },
+                icon: const Icon(Icons.logout)),
+          ),
+        ],
+        title: const Text("Welcome  "),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text("Get SharedPrefs "),
+            ),
+            Text(uuid),
+            Text(phone),
+            Text(name),
+          ],
+        ),
+      ),
     );
   }
 }
