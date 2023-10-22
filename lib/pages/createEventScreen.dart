@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:id_generator/pages/adminHome.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../animations/slideRight.dart';
 
@@ -17,6 +22,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController endDate = TextEditingController();
   TextEditingController startTime = TextEditingController();
   TextEditingController endTime = TextEditingController();
+  TextEditingController address = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   DateTime _selectedTime = DateTime.now();
 
   @override
@@ -69,6 +76,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -76,6 +84,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               children: [
                 const SizedBox(height: 30),
                 TextFormField(
+                  controller: eventTitle,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please Enter Title  ';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text(
@@ -90,6 +106,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Description ';
+                    }
+                    return null;
+                  },
+                  controller: eventDescription,
+                  keyboardType: TextInputType.text,
                   maxLines: 3,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -138,8 +162,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           children: [
                             SizedBox(
                               width: 150,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: startDate,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Select Date  ';
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.text,
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
@@ -166,8 +197,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             ),
                             SizedBox(
                               width: 150,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: endDate,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Select Date  ';
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.text,
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
@@ -240,8 +278,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           children: [
                             SizedBox(
                               width: 150,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: startTime,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Select Time';
+                                  }
+                                  return null;
+                                },
                                 readOnly: true,
                                 onTap: () => _selectTime(context, "startTime"),
                                 decoration: const InputDecoration(
@@ -251,8 +295,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             ),
                             SizedBox(
                               width: 150,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: endTime,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please Select Time';
+                                  }
+                                  return null;
+                                },
                                 readOnly: true,
                                 onTap: () => _selectTime(context, "endTime"),
                                 decoration: const InputDecoration(
@@ -269,43 +319,55 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 const SizedBox(
                   height: 40,
                 ),
-                // ElevatedButton(
-                //   style: ButtonStyle(
-                //     shape: MaterialStatePropertyAll(
-                //       RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(10.0),
-                //       ),
-                //     ),
-                //     elevation: MaterialStatePropertyAll(20),
-                //     foregroundColor: MaterialStatePropertyAll(Colors.white),
-                //     backgroundColor: const MaterialStatePropertyAll(
-                //         Color.fromARGB(255, 160, 105, 199)),
-                //     minimumSize:
-                //         const MaterialStatePropertyAll(Size.fromHeight(50.0)),
-                //   ),
-                //   onPressed: () {
-                //     const SnackBar(
-                //       content: Text(" Event Created !!! "),
-                //     );
-                //   },
-                //   child: const Text(
-                //     " Create Event ",
-                //     style: TextStyle(fontSize: 25),
-                //   ),
-                // )
+                TextFormField(
+                  controller: address,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please Enter Address ';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    label: Text(
+                      "Event Address ",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 62, 22, 131),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            CollectionReference collRef =
+                FirebaseFirestore.instance.collection('events');
+            collRef.add({
+              'uuid': Uuid().v4(),
+              'eventTitle': eventTitle.text,
+              'eventDescription': eventDescription.text,
+              'eventStartDate': startDate.text,
+              'eventEndDate': endDate.text,
+              'eventStartTime': startTime.text,
+              'eventEndTime': endTime.text,
+              'address': address.text,
+            });
+          }
+        },
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+        child: const Icon(
           Icons.add,
           size: 48,
         ),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
       ),
     );
   }
