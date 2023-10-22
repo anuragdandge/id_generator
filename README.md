@@ -25,3 +25,7 @@ samples, guidance on mobile development, and a full API reference.
 - [x] StudentHome
 - [x] Verify Phone Number Screen 
 - [x] OTP functionality For Phone Authentication
+- [x] Admin Home Screen
+- [x] Create Event Screen with Generating Event Functionality 
+- [x] View Event Screen with Fetching Event Functionality 
+
