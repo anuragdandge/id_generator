@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 import 'package:id_generator/features/authentication/controllers/encryption.dart';
+import 'package:id_generator/pages/student_home.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widgets/signUpWidgets.dart';
@@ -545,18 +547,36 @@ class _SignupState extends State<Signup> {
               });
             }
             // _signup();
-            uploadImage();
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setBool('isLoggedIn', true);
+            await prefs.setString("uuid", uuid);
+            await prefs.setString("phone", widget.phoneNo);
+            await prefs.setString("name", fullNameController.text);
             setState(() {
-              Navigator.pop(context);
-              Get.to(() => StudentQR(
-                    data: uuid,
-                    file: _selectedImage!,
-                    name: fullNameController.text,
-                    phone: widget.phoneNo,
-                  ));
+              // Navigator.pop(context);
+              if (_selectedImage == null) {
+                showDialog(
+                    context: context,
+                    builder: ((context) => AlertDialog(
+                          title: const Text("Select Profile Photo "),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Close"))
+                          ],
+                        )));
+              } else {
+                uploadImage();
+                Navigator.pop(context);
+                Get.to(() => StudentHome());
+                // Get.to(() => StudentQR(
+                //       data: uuid,
+                //       file: _selectedImage!,
+                //       name: fullNameController.text,
+                //       phone: widget.phoneNo,
+                //     ));
+              }
             });
           }
         },
@@ -703,13 +723,6 @@ class _SignupState extends State<Signup> {
     setState(() {
       uuid = const Uuid().v4(); // Generate a new random UUID
     });
-  }
-
-  void _signup() {
-    // setPreferance();
-    // setState(() {
-    //   Get.to(() => const StudentQR());
-    // });
   }
 
   uploadImage() async {

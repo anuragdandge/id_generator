@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/signup.dart';
 import 'package:id_generator/pages/student_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyPhoneScreen extends StatefulWidget {
   const VerifyPhoneScreen({super.key});
@@ -74,8 +76,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
-                            controller: _codeController,
-                          )
+                              controller: _codeController,
+                              keyboardType: TextInputType.number)
                         ],
                       ),
                       actions: [
@@ -181,7 +183,62 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          _verifyPhoneNumber("+91${phoneController.text}");
+                          QuerySnapshot snapshot = await FirebaseFirestore
+                              .instance
+                              .collection('students')
+                              .where('phonenumber',
+                                  isEqualTo: phoneController.text)
+                              .get();
+                          if (snapshot.docs.isNotEmpty) {
+                            for (QueryDocumentSnapshot document
+                                in snapshot.docs) {
+                              Map<String, dynamic> data =
+                                  document.data() as Map<String, dynamic>;
+                              // String uuid = data['uuid'];
+                              debugPrint(
+                                  "User Already Exists in Database with UUID : ${data['uuid']}");
+                              // ignore: use_build_context_synchronously
+                              showDialog(
+                                context: context,
+                                builder: (context) => const AlertDialog(
+                                  title: Text("User Already Exists  "),
+                                ),
+                              );
+                              // academicyear "2525"
+                              // bloodgroup "O+"
+                              // class "SYMCA"
+                              // dateofbirth "031001"
+                              // division "B"
+                              // emergencynumber "9145369975"
+                              // fullname "Anurag "
+                              // gender "Male "
+                              // localaddress "abc"
+                              // password "Aa@1"
+                              // phonenumber "+919145369970"
+                              // rollnumber "52112"
+                              // uuid "2c763a8b-4b0a-4fc6-a1ef-446c0186fc5b"
+
+                              // if (passwordController.text != password) {
+                              //   // ignore: use_build_context_synchronously
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (context) => const AlertDialog(
+                              //       title: Text("Password Not Matched "),
+                              //     ),
+                              //   );
+                              // } else {
+                              //   final SharedPreferences prefs =
+                              //       await SharedPreferences.getInstance();
+                              //   await prefs.setBool('isLoggedIn', true);
+                              //   debugPrint(" User Logged In !!!");
+                              //   // ignore: use_build_context_synchronously
+                              //   Navigator.pop(context);
+                              //   Get.to(() => const StudentHome());
+                              // }
+                            }
+                          } else {
+                            _verifyPhoneNumber("+91${phoneController.text}");
+                          }
                         } else {
                           shakeKey.currentState?.shake();
                         }
