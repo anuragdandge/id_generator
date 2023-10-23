@@ -8,7 +8,7 @@ class EncryptData {
 
   static Encrypted? encryptAES(String plainText, String keyw) {
     String extractedString = keyw.substring(0, 32);
-    final key = Key.fromUtf8('$extractedString');
+    final key = Key.fromUtf8(extractedString);
     final iv = IV.fromLength(16);
     final encrypter = Encrypter(AES(key));
     encrypted = encrypter.encrypt(plainText, iv: iv);

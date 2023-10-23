@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:id_generator/pages/adminHome.dart';
 import 'package:id_generator/pages/login.dart';
-import 'package:id_generator/pages/student_home.dart';
-import 'package:id_generator/pages/student_qr.dart';
-import 'package:id_generator/pages/verify_otp.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'getStarted.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -41,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     print("Is User Already Logged in :  $isLoggedIn");
     Navigator.pop(context);
-    Get.to(() => isLoggedIn ? StudentHome() : const LoginScreen());
+    Get.to(() => isLoggedIn ? const AdminHome() : const LoginScreen());
   }
 
   gotoHome() {}

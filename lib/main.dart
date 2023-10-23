@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:id_generator/pages/adminHome.dart';
+import 'package:id_generator/pages/createEventScreen.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_qr.dart';
 import 'pages/checklocation.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      // home: const SplashScreen(),
       home: const SplashScreen(),
     );
   }
