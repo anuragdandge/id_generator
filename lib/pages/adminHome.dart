@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/viewEvents.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../animations/slideRight.dart';
 import 'createEventScreen.dart';
@@ -19,15 +21,31 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Admin Dashboard")),
+      appBar: AppBar(
+        title: const Text("Admin Dashboard"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool('isLoggedIn', false);
+              Navigator.pop(context);
+              Get.to(() => const LoginScreen());
+            },
+            icon: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Icon(Icons.logout),
+            ),
+          )
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: Container(
-              padding: EdgeInsets.all(24.0),
-              margin: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
+              margin: const EdgeInsets.all(16.0),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -62,9 +80,8 @@ class _AdminHomeState extends State<AdminHome> {
                           const MaterialStatePropertyAll(Size.fromHeight(50.0)),
                     ),
                     onPressed: () {
-                      // Navigator.push(context,
-                      //     SlideRightRoute(page: const CreateEventScreen()));
-                      Get.to(() => const CreateEventScreen());
+                      Navigator.push(context,
+                          SlideRightRoute(page: const CreateEventScreen()));
                     },
                     child: const Text(
                       " Create Event ",
@@ -77,8 +94,8 @@ class _AdminHomeState extends State<AdminHome> {
           ),
           Center(
             child: Container(
-              padding: EdgeInsets.all(24.0),
-              margin: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
+              margin: const EdgeInsets.all(16.0),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -113,9 +130,8 @@ class _AdminHomeState extends State<AdminHome> {
                           const MaterialStatePropertyAll(Size.fromHeight(50.0)),
                     ),
                     onPressed: () {
-                      // Navigator.push(context,
-                      //     SlideRightRoute(page: const ViewEventsScreen()));
-                      Get.to(() => const ViewEventsScreen());
+                      Navigator.push(context,
+                          SlideRightRoute(page: const ViewEventsScreen()));
                     },
                     child: const Text(
                       " View Events  ",

@@ -3,10 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
-import 'package:id_generator/pages/getStarted.dart';
-import 'package:id_generator/pages/generate_qr_code.dart';
+import 'package:id_generator/pages/adminHome.dart';
 import 'package:id_generator/pages/student_home.dart';
-import 'package:id_generator/pages/student_qr.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -191,9 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', true);
                   debugPrint(" User Logged In !!!");
-                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
-                  Get.to(() => const StudentHome());
+                  Get.to(() => const AdminHome());
                 }
               }
             } else {

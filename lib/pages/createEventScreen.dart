@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/pages/adminHome.dart';
+import 'package:id_generator/pages/viewEvents.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-import '../animations/slideRight.dart';
 
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
@@ -33,9 +30,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.initState();
   }
 
-  Future<void> _selectTime(BuildContext context, String time) async {
+  Future<void> _selectTime(
+      BuildContext context, String time, String startOrEnd) async {
     TimeOfDay initialTime = TimeOfDay.fromDateTime(_selectedTime);
     TimeOfDay? selectedTime = await showTimePicker(
+      helpText: startOrEnd,
       context: context,
       initialTime: initialTime,
     );
@@ -68,9 +67,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         title: const Text(
           " Create Event ",
           style: TextStyle(
-            fontSize: 40,
+            fontSize: 30,
             color: Colors.deepPurple,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -82,7 +81,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: eventTitle,
                   validator: (value) {
@@ -93,12 +92,36 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.title),
                     border: OutlineInputBorder(),
                     label: Text(
                       "Event Title",
                       style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromARGB(255, 62, 22, 131),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: address,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please Enter Address ';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.location_on_outlined),
+                    border: OutlineInputBorder(),
+                    label: Text(
+                      "Event Address ",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                         color: Color.fromARGB(255, 62, 22, 131),
                       ),
                     ),
@@ -114,14 +137,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                   controller: eventDescription,
                   keyboardType: TextInputType.text,
-                  maxLines: 3,
                   decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.description),
                     border: OutlineInputBorder(),
                     label: Text(
                       "Event Description",
                       style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                         color: Color.fromARGB(255, 62, 22, 131),
                       ),
                       textAlign: TextAlign.start,
@@ -132,8 +155,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 241, 226, 255),
-                      borderRadius: BorderRadius.circular(20)),
+                    color: const Color.fromARGB(255, 241, 226, 255),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        style: BorderStyle.solid, width: 1, color: Colors.grey),
+                  ),
                   child: Column(
                     children: [
                       const Padding(
@@ -166,7 +192,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 controller: startDate,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Select Date  ';
+                                    return ' Event Start Time  ';
                                   }
                                   return null;
                                 },
@@ -174,6 +200,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
+                                      helpText: "Event Starting Date ",
                                       context: context,
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime.now(),
@@ -201,7 +228,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 controller: endDate,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Select Date  ';
+                                    return ' Event End Date ';
                                   }
                                   return null;
                                 },
@@ -209,6 +236,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
+                                      helpText: "Event Ending Date ",
                                       context: context,
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime.now(),
@@ -241,15 +269,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                      boxShadow: const <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(2, 8),
-                            spreadRadius: -2,
-                            blurRadius: 10)
-                      ],
-                      color: const Color.fromARGB(255, 241, 226, 255),
-                      borderRadius: BorderRadius.circular(5)),
+                    // boxShadow: const <BoxShadow>[
+                    //   BoxShadow(
+                    //       color: Colors.grey,
+                    //       offset: Offset(2, 8),
+                    //       spreadRadius: -2,
+                    //       blurRadius: 10)
+                    // ],
+                    color: const Color.fromARGB(255, 241, 226, 255),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                        style: BorderStyle.solid, width: 1, color: Colors.grey),
+                  ),
                   child: Column(
                     children: [
                       const Padding(
@@ -282,12 +313,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 controller: startTime,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Select Time';
+                                    return ' Event Start Time';
                                   }
                                   return null;
                                 },
                                 readOnly: true,
-                                onTap: () => _selectTime(context, "startTime"),
+                                onTap: () => _selectTime(context, "startTime",
+                                    " Event Starting Time "),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     hintText: "From Time"),
@@ -299,15 +331,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 controller: endTime,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Select Time';
+                                    return 'Event End Time';
                                   }
                                   return null;
                                 },
                                 readOnly: true,
-                                onTap: () => _selectTime(context, "endTime"),
+                                onTap: () => _selectTime(
+                                    context, "endTime", "Event Ending Time "),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    hintText: "End Date "),
+                                    hintText: "End Time "),
                               ),
                             ),
                           ],
@@ -317,28 +350,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
-                ),
-                TextFormField(
-                  controller: address,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please Enter Address ';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text(
-                      "Event Address ",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(255, 62, 22, 131),
-                      ),
-                    ),
-                  ),
+                  height: 20,
                 ),
               ],
             ),
@@ -347,19 +359,44 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // showDialog(
+          //   // barrierDismissible: false,
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     title: const Text("Event Added "),
+          //     content: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         Image.asset(
+          //           'assets/images/eventAdded.png',
+          //         ),
+          //         Row(
+          //           children: [
+          //             ElevatedButton(
+          //                 onPressed: () {}, child: const Text("View Events "))
+          //           ],
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // );
           if (_formKey.currentState!.validate()) {
             CollectionReference collRef =
                 FirebaseFirestore.instance.collection('events');
             collRef.add({
-              'uuid': Uuid().v4(),
+              'uuid': const Uuid().v4(),
               'eventTitle': eventTitle.text,
               'eventDescription': eventDescription.text,
               'eventStartDate': startDate.text,
               'eventEndDate': endDate.text,
               'eventStartTime': startTime.text,
               'eventEndTime': endTime.text,
-              'address': address.text,
+              'eventAddress': address.text,
             });
+            Navigator.pop(context);
+            Get.to(
+              () => const ViewEventsScreen(),
+            );
           }
         },
         backgroundColor: Colors.deepPurple,

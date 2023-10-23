@@ -74,7 +74,7 @@ class _CheckLocationState extends State<CheckLocation> {
                   debugPrint("${_currentLocation?.latitude}");
                   debugPrint("${_currentLocation?.longitude}");
                 },
-                child: Text("Get Location "),
+                child: const Text("Get Location "),
               ),
               Text("Latitude :  ${_currentLocation?.latitude}"),
               Text("Longitude :  ${_currentLocation?.longitude}"),

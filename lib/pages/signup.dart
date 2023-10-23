@@ -1,9 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously, non_constant_identifier_names
-import 'dart:convert';
 
-import 'package:id_generator/features/authentication/controllers/encryption.dart';
 import 'package:id_generator/pages/student_home.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widgets/signUpWidgets.dart';
@@ -11,7 +8,6 @@ import 'dart:io';
 // import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:id_generator/pages/verify_otp.dart';
-import 'package:id_generator/pages/student_qr.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
@@ -569,7 +565,7 @@ class _SignupState extends State<Signup> {
               } else {
                 uploadImage();
                 Navigator.pop(context);
-                Get.to(() => StudentHome());
+                Get.to(() => const StudentHome());
                 // Get.to(() => StudentQR(
                 //       data: uuid,
                 //       file: _selectedImage!,
