@@ -26,3 +26,6 @@ samples, guidance on mobile development, and a full API reference.
 - [x] OTP functionality For Phone Authentication
 - [x] Event Generate UI with functionality 
 - [x] Event View & Delete UI with functionality  
+- [x] Admin Home Screen
+- [x] Create Event Screen with Generating Event Functionality 
+- [x] View Event Screen with Fetching Event Functionality 
