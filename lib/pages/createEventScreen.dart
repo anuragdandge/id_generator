@@ -19,43 +19,70 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController endDate = TextEditingController();
   TextEditingController startTime = TextEditingController();
   TextEditingController endTime = TextEditingController();
+  DateTime _selectedStartTime = DateTime.now();
+  DateTime _selectedEndTime = DateTime.now().add(const Duration(hours: 1));
   TextEditingController address = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  DateTime _selectedTime = DateTime.now();
 
   @override
   void initState() {
-    startDate.text = ""; //set the initial value of text field
-    endDate.text = ""; //set the initial value of text field
+    startDate.text = "";
+    endDate.text = "";
     super.initState();
   }
 
-  Future<void> _selectTime(
-      BuildContext context, String time, String startOrEnd) async {
-    TimeOfDay initialTime = TimeOfDay.fromDateTime(_selectedTime);
+  Future<void> _selectTime(BuildContext context, String time, String startOrEnd,
+      TimeOfDay initTime) async {
     TimeOfDay? selectedTime = await showTimePicker(
-      helpText: startOrEnd,
-      context: context,
-      initialTime: initialTime,
-    );
+        helpText: startOrEnd, context: context, initialTime: initTime);
 
     if (selectedTime != null) {
       final newTime = DateTime(
-        _selectedTime.year,
-        _selectedTime.month,
-        _selectedTime.day,
+        _selectedStartTime.year,
+        _selectedStartTime.month,
+        _selectedStartTime.day,
         selectedTime.hour,
         selectedTime.minute,
       );
+      if (time == "startTime") {
+        startTime.text = DateFormat.jm().format(newTime);
+        // setState(() {
 
-      setState(() {
-        _selectedTime = newTime;
-        if (time == "startTime") {
-          startTime.text = DateFormat.jm().format(newTime);
-        } else if (time == "endTime") {
+        // });
+      } else if (time == "endTime") {
+        setState(() {
           endTime.text = DateFormat.jm().format(newTime);
-        }
-      });
+          _selectedEndTime = newTime;
+          // DateTime sixHoursFromNow =
+          //     _selectedEndTime.add(const Duration(hours: 6));
+          if (_selectedEndTime.isBefore(_selectedStartTime)) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                backgroundColor: Colors.red[100],
+                title: const Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded),
+                    Text("Warning !!!"),
+                  ],
+                ),
+                content:
+                    const Text(" End Time Should be Greater than 6 hours "),
+              ),
+            );
+          }
+        });
+      }
+
+      //   setState(() {
+      //     _selectedTime = newTime;
+      //     if (time == "startTime") {
+      //       startTime.text = DateFormat.jm().format(newTime);
+      //     } else if (time == "endTime") {
+
+      //       endTime.text = DateFormat.jm().format(newTime);
+      //     }
+      //   });
     }
   }
 
@@ -156,7 +183,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 241, 226, 255),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                         style: BorderStyle.solid, width: 1, color: Colors.grey),
                   ),
@@ -180,14 +207,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           ],
                         ),
                       ),
-                      const Divider(),
+                      const Divider(
+                        thickness: 2,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: 150,
+                              width: 140,
                               child: TextFormField(
                                 controller: startDate,
                                 validator: (value) {
@@ -200,13 +229,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
-                                      helpText: "Event Starting Date ",
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(2100));
+                                    helpText: "Event Starting Date ",
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2100),
+                                  );
                                   if (pickedDate != null) {
-                                    print(pickedDate);
+                                    print(
+                                        "$pickedDate.month.toString() $pickedDate.day $pickedDate.year");
                                     String formattedDate =
                                         DateFormat('dd-MM-yyyy')
                                             .format(pickedDate);
@@ -222,8 +253,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     hintText: "Start Date "),
                               ),
                             ),
+                            const Icon(Icons.sync_alt),
                             SizedBox(
-                              width: 150,
+                              width: 140,
                               child: TextFormField(
                                 controller: endDate,
                                 validator: (value) {
@@ -277,7 +309,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     //       blurRadius: 10)
                     // ],
                     color: const Color.fromARGB(255, 241, 226, 255),
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                         style: BorderStyle.solid, width: 1, color: Colors.grey),
                   ),
@@ -301,14 +333,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           ],
                         ),
                       ),
-                      const Divider(),
+                      const Divider(
+                        thickness: 2,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: 150,
+                              width: 140,
                               child: TextFormField(
                                 controller: startTime,
                                 validator: (value) {
@@ -318,15 +352,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   return null;
                                 },
                                 readOnly: true,
-                                onTap: () => _selectTime(context, "startTime",
-                                    " Event Starting Time "),
+                                onTap: () => _selectTime(
+                                  context,
+                                  "startTime",
+                                  " Event Starting Time ",
+                                  TimeOfDay.now(),
+                                ),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    hintText: "From Time"),
+                                    hintText: "Start Time"),
                               ),
                             ),
+                            const Icon(Icons.sync_alt),
                             SizedBox(
-                              width: 150,
+                              width: 140,
                               child: TextFormField(
                                 controller: endTime,
                                 validator: (value) {
@@ -337,7 +376,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 },
                                 readOnly: true,
                                 onTap: () => _selectTime(
-                                    context, "endTime", "Event Ending Time "),
+                                  context,
+                                  "endTime",
+                                  "Event Ending Time ",
+                                  TimeOfDay.fromDateTime(
+                                    DateTime.now().add(
+                                      const Duration(hours: 3),
+                                    ),
+                                  ),
+                                ),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     hintText: "End Time "),
@@ -408,4 +455,33 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       ),
     );
   }
+
+  // Future<void> _selectTime(
+  //     BuildContext context, String time, String startOrEnd) async {
+  //   TimeOfDay initialTime = TimeOfDay.fromDateTime(_selectedTime);
+  //   TimeOfDay? selectedTime = await showTimePicker(
+  //     helpText: startOrEnd,
+  //     context: context,
+  //     initialTime: initialTime,
+  //   );
+
+  //   if (selectedTime != null) {
+  //     final newTime = DateTime(
+  //       _selectedTime.year,
+  //       _selectedTime.month,
+  //       _selectedTime.day,
+  //       selectedTime.hour,
+  //       selectedTime.minute,
+  //     );
+
+  //     setState(() {
+  //       _selectedTime = newTime;
+  //       if (time == "startTime") {
+  //         startTime.text = DateFormat.jm().format(newTime);
+  //       } else if (time == "endTime") {
+  //         endTime.text = DateFormat.jm().format(newTime);
+  //       }
+  //     });
+  //   }
+  // }
 }

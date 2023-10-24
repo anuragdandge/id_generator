@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/adminHome.dart';
-import 'package:id_generator/pages/student_home.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
