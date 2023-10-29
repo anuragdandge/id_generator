@@ -399,27 +399,6 @@ class _SignupState extends State<Signup> {
           },
         ),
       );
-
-      // return GestureDetector(
-      //     onTap: () => showDialog(
-      //         context: context,
-      //         builder: (context) {
-      //           return _buildAlertDialog();
-      //         }),
-      //     child: SvgPicture.asset(
-      //       './assets/images/emptyProfile.svg',
-      //     ));
-      // return FilledButton(
-      //     onPressed: () => showDialog(
-      //         context: context,
-      //         builder: (context) {
-      //           return _buildAlertDialog();
-      //         }),
-      //     child: Image.asset('./assets/images/emptyProfile.png'));
-      // return Container(
-
-      //   child: Image.asset('./assets/images/emptyProfile.png'),
-      // );
     }
   }
 
@@ -522,7 +501,6 @@ class _SignupState extends State<Signup> {
                 'uuid': uuid,
                 'phonenumber': widget.phoneNo,
                 'password': password.text,
-                // 'password': hashedPass?.base64,
                 'emergencynumber': emergencyNumber.text,
                 'division': _selectedDivision,
                 'bloodgroup': _selectedBloodGroup,
@@ -538,7 +516,6 @@ class _SignupState extends State<Signup> {
               credRef.add({
                 'phonenumber': widget.phoneNo.substring(3),
                 'password': password.text,
-                // 'password': hashedPass?.base64,
                 'uuid': uuid,
               });
             }
@@ -566,12 +543,6 @@ class _SignupState extends State<Signup> {
                 uploadImage();
                 Navigator.pop(context);
                 Get.to(() => const StudentHome());
-                // Get.to(() => StudentQR(
-                //       data: uuid,
-                //       file: _selectedImage!,
-                //       name: fullNameController.text,
-                //       phone: widget.phoneNo,
-                //     ));
               }
             });
           }

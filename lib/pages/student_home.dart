@@ -23,6 +23,7 @@ class _StudentHomeState extends State<StudentHome> {
   @override
   void initState() {
     super.initState();
+    getSharedPrefs();
     initPlatformState();
   }
 
@@ -89,7 +90,9 @@ class _StudentHomeState extends State<StudentHome> {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                getSharedPrefs();
+              },
               child: const Text("Get SharedPrefs "),
             ),
             Text("UUID = $uuid"),

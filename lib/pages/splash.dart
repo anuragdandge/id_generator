@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/pages/adminHome.dart';
+import 'package:id_generator/pages/admin/adminHome.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/student_home.dart';
 

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/pages/viewEvents.dart';
+import 'package:id_generator/pages/admin/viewEvents.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 

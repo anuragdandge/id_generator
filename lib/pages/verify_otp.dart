@@ -242,7 +242,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(110, 30),
                         backgroundColor: myColor,
                         shape: const StadiumBorder(),
                         elevation: 10,
