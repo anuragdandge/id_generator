@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/pages/adminHome.dart';
 import 'package:id_generator/pages/login.dart';
+import 'package:id_generator/pages/student_home.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,8 +46,11 @@ class _SplashScreenState extends State<SplashScreen> {
   initScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Lottie.asset('assets/lotties/splash.json'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset('assets/lotties/splash.json', fit: BoxFit.cover),
+        ],
       ),
     );
   }

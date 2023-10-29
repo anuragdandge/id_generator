@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mac_address/mac_address.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,6 +59,12 @@ class _StudentHomeState extends State<StudentHome> {
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   backgroundColor: Colors.purpleAccent,
+    //   body: Lottie.asset(
+    //     'assets/lotties/splash.json',
+    //   ),
+    // );
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -69,13 +76,14 @@ class _StudentHomeState extends State<StudentHome> {
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', false);
                   Navigator.pop(context);
+                  // setState(() {});
                   debugPrint(" User Logged Out !!!");
                   Get.to(() => const LoginScreen());
                 },
                 icon: const Icon(Icons.logout)),
           ),
         ],
-        title: const Text("Welcome  "),
+        title: const Text("Welcome "),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -84,9 +92,9 @@ class _StudentHomeState extends State<StudentHome> {
               onPressed: () {},
               child: const Text("Get SharedPrefs "),
             ),
-            Text(uuid),
-            Text(phone),
-            Text(name),
+            Text("UUID = $uuid"),
+            Text("Phone = $phone"),
+            Text("Name = $name"),
           ],
         ),
       ),
