@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously, non_constant_identifier_names
 
 import 'package:id_generator/pages/student_home.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widgets/signUpWidgets.dart';
@@ -39,6 +40,7 @@ class _SignupState extends State<Signup> {
   // TextEditingController phoneController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dateOfBirth = TextEditingController();
+  // TextEditingController academicYear = TextEditingController();
   TextEditingController academicYear = TextEditingController();
   TextEditingController emergencyNumber = TextEditingController();
   TextEditingController localAddress = TextEditingController();
@@ -52,7 +54,7 @@ class _SignupState extends State<Signup> {
   String? _selectedBloodGroup = bloodGroups.first;
   File? _selectedImage;
   final _formKey = GlobalKey<FormState>();
-
+  String imgUrl = '';
   RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
   RegExp fullNameValid =
       RegExp(r"^[a-zA-Z]+(([',\.\-\s][a-zA-Z ])?[a-zA-Z]*)*$");
@@ -171,6 +173,25 @@ class _SignupState extends State<Signup> {
                   }
                   return null;
                 },
+                readOnly: true,
+                onTap: () async {
+                  DateTime? pickedDob = await showDatePicker(
+                    helpText: "Date Of Birth  ",
+                    context: context,
+                    initialDate: DateTime(2000),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  );
+                  if (pickedDob != null) {
+                    String formattedDate =
+                        DateFormat('dd/MM/yyyy').format(pickedDob);
+
+                    setState(() {
+                      dateOfBirth.text =
+                          formattedDate; //set output date to TextField value.
+                    });
+                  }
+                },
                 keyboardType: TextInputType.datetime,
                 controller: dateOfBirth,
                 decoration: const InputDecoration(
@@ -193,14 +214,34 @@ class _SignupState extends State<Signup> {
                 },
                 keyboardType: TextInputType.datetime,
                 controller: academicYear,
+                readOnly: true,
+                onTap: () async {
+                  DateTime? pickedAy = await showDatePicker(
+                    initialDatePickerMode: DatePickerMode.year,
+                    helpText: "Academic year ",
+                    context: context,
+                    initialDate: DateTime(2020),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now(),
+                  );
+                  if (pickedAy != null) {
+                    String formattedDate = DateFormat('yyyy').format(pickedAy);
+
+                    setState(() {
+                      academicYear.text =
+                          formattedDate; //set output date to TextField value.
+                    });
+                  }
+                },
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "2024",
-                    label: Text(" Academic Year  "),
-                    prefixIcon: Icon(
-                      Icons.school_outlined,
-                      color: Colors.deepPurple,
-                    )),
+                  border: OutlineInputBorder(),
+                  hintText: "2024",
+                  label: Text(" Academic Year  "),
+                  prefixIcon: Icon(
+                    Icons.school_outlined,
+                    color: Colors.deepPurple,
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
               // TextFormField(
@@ -478,46 +519,48 @@ class _SignupState extends State<Signup> {
                 });
           } else {
             if (_formKey.currentState!.validate()) {
-              debugPrint("UUID  :  ${uuid.toString()}");
-              debugPrint("Entered Full Name  :  ${fullNameController.text}");
-              debugPrint("DOB  :  ${dateOfBirth.text}");
-              debugPrint("AY  :  ${academicYear.text}");
-              debugPrint("Phone Number   :  ${widget.phoneNo}");
-              debugPrint("Emergency Phone Number   :  ${emergencyNumber.text}");
-              debugPrint("local Address   :  ${localAddress.text}");
-              debugPrint("Roll Number   :  ${rollNumber.text}");
-              debugPrint("Selected Class :  $_selectedClass");
-              debugPrint("Selected Gender:  $_selectedGender");
-              debugPrint("Selected Blood Group  :  $_selectedBloodGroup");
-              debugPrint("Passport Photo Location:  $_selectedImage");
               _generateNewUuid();
+              // await uploadImageToFirebaseStorage();
+              Reference storageReference =
+                  FirebaseStorage.instance.ref().child('studentsProfile/$uuid');
+              UploadTask uploadTask = storageReference.putFile(_selectedImage!);
 
+              // Wait for the upload to complete
+              await uploadTask.whenComplete(() => null);
+
+              // Get the download URL
+              String downloadURL = await storageReference.getDownloadURL();
               CollectionReference collRef =
                   FirebaseFirestore.instance.collection('students');
-              // var hashedPass = EncryptData.encryptAES(password.text, uuid);
-              // debugPrint("Password:  ${hashedPass?.base64}");
-              collRef.add({
-                'fullname': fullNameController.text,
-                'uuid': uuid,
-                'phonenumber': widget.phoneNo,
-                'password': password.text,
-                'emergencynumber': emergencyNumber.text,
-                'division': _selectedDivision,
-                'bloodgroup': _selectedBloodGroup,
-                'class': _selectedClass,
-                'gender': _selectedGender,
-                'dateofbirth': dateOfBirth.text,
-                'academicyear': academicYear.text,
-                'localaddress': localAddress.text,
-                'rollnumber': rollNumber.text,
-              });
+              collRef.add(
+                {
+                  'fullname': fullNameController.text,
+                  'uuid': uuid,
+                  'profileUrl': downloadURL,
+                  'phonenumber': widget.phoneNo,
+                  'password': password.text,
+                  'emergencynumber': emergencyNumber.text,
+                  'division': _selectedDivision,
+                  'bloodgroup': _selectedBloodGroup,
+                  'class': _selectedClass,
+                  'gender': _selectedGender,
+                  'dateofbirth': dateOfBirth.text,
+                  'academicyear': academicYear.text,
+                  'localaddress': localAddress.text,
+                  'rollnumber': rollNumber.text,
+                  'verified': 'false',
+                  'registeredAt': DateTime.now(),
+                },
+              );
               CollectionReference credRef =
                   FirebaseFirestore.instance.collection('credentials');
-              credRef.add({
-                'phonenumber': widget.phoneNo.substring(3),
-                'password': password.text,
-                'uuid': uuid,
-              });
+              credRef.add(
+                {
+                  'phonenumber': widget.phoneNo.substring(3),
+                  'password': password.text,
+                  'uuid': uuid,
+                },
+              );
             }
             // _signup();
             final SharedPreferences prefs =
@@ -540,7 +583,7 @@ class _SignupState extends State<Signup> {
                           ],
                         )));
               } else {
-                uploadImage();
+                // uploadImage();
                 Navigator.pop(context);
                 Get.to(() => const StudentHome());
               }
@@ -692,7 +735,7 @@ class _SignupState extends State<Signup> {
     });
   }
 
-  uploadImage() async {
+  Future uploadImage() async {
     if (_selectedImage == null) {
       showDialog(
           context: context,
@@ -705,8 +748,27 @@ class _SignupState extends State<Signup> {
                 ],
               )));
     } else {
-      var firebaseStorage = FirebaseStorage.instance.ref(uuid);
-      await firebaseStorage.putFile(_selectedImage!);
+      var firebaseStorage = FirebaseStorage.instance.ref('students/$uuid');
+      UploadTask uploadTask = firebaseStorage.putFile(_selectedImage!);
+      await uploadTask.whenComplete(() => null);
+      String downloadURL = await firebaseStorage.getDownloadURL();
+      setState(() {
+        imgUrl = downloadURL;
+      });
     }
   }
+
+  // Future<String> uploadImageToFirebaseStorage() async {
+  //   Reference storageReference =
+  //       FirebaseStorage.instance.ref().child('students/$uuid');
+  //   UploadTask uploadTask = storageReference.putFile(File(uuid));
+
+  //   // Wait for the upload to complete
+  //   await uploadTask.whenComplete(() => null);
+
+  //   // Get the download URL
+  //   String downloadURL = await storageReference.getDownloadURL();
+
+  //   return downloadURL;
+  // }
 }

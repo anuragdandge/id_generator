@@ -170,17 +170,24 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_formKey.currentState!.validate()) {
             final snapshot = await checkCredentials();
             if (snapshot.docs.isNotEmpty) {
+              debugPrint("Snapshot is Not Empty");
               for (QueryDocumentSnapshot document in snapshot.docs) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
+                print(" Snapshot $data");
                 String password = data['password'];
 
                 if (passwordController.text != password) {
                   // ignore: use_build_context_synchronously
-                  showDialog(
-                    context: context,
-                    builder: (context) => const AlertDialog(
-                      title: Text("Password Not Matched "),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red[100],
+                      content: const Text(
+                        'Password Not matched ',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      duration: const Duration(
+                          seconds: 3), // Adjust the duration as needed
                     ),
                   );
                 } else {
@@ -198,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SnackBar(
                   content: Text('Phone Number does not exist '),
                   duration:
-                      Duration(seconds: 2), // Adjust the duration as needed
+                      Duration(seconds: 3), // Adjust the duration as needed
                 ),
               );
             }
@@ -246,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .collection('credentials')
         .where('phonenumber', isEqualTo: phoneController.text)
         .get();
+    print("Check Credential();");
     return snapshot;
   }
 }

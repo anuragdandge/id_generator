@@ -23,22 +23,11 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   bool rememberUser = false;
   final _formKey = GlobalKey<FormState>();
   final shakeKey = GlobalKey<ShakeWidgetState>();
-
-  RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  bool isLoading = false;
   RegExp phoneValid = RegExp(r"^\+?[0-9]{10,12}$");
-
-  bool validatePassword(String pass) {
-    String password = pass.trim();
-    if (passValid.hasMatch(password)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   bool validatePhoneNumber(String phone) {
     String phoneNumber = phone.trim();
-
     if (phoneValid.hasMatch(phoneNumber)) {
       return true;
     } else {
@@ -64,7 +53,11 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
           })),
           codeSent: (String verificationId, [int? forceResendingToken]) {
             debugPrint("CodeSent...");
-
+            // isLoading
+            //     ? const Center(
+            //         child: CircularProgressIndicator(),
+            //       )
+            //     : '
             showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -75,6 +68,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                         children: [
                           TextFormField(
                               controller: _codeController,
+                              maxLength: 6,
                               keyboardType: TextInputType.number)
                         ],
                       ),
@@ -93,8 +87,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                                   .then((value) {
                                 // ignore: unnecessary_null_comparison
                                 if (value != null) {
-                                  Navigator.pop((context));
                                   debugPrint("Verification Completed !!!");
+                                  Navigator.pop(context);
                                   Get.to(() => Signup(
                                         phoneNo: phone,
                                       ));
@@ -149,9 +143,10 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                       TextFormField(
                         keyboardType: TextInputType.phone,
                         controller: phoneController,
+                        maxLength: 10,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "9145369970",
+                          hintText: "Enter Phone Number ",
                           labelText: "Phone Number",
                           prefixIcon: Icon(
                             Icons.phone,
@@ -187,6 +182,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                               .where('phonenumber',
                                   isEqualTo: phoneController.text)
                               .get();
+                          // setState(() {
+                          //   isLoading = true;
+                          // });
                           if (snapshot.docs.isNotEmpty) {
                             for (QueryDocumentSnapshot document
                                 in snapshot.docs) {
