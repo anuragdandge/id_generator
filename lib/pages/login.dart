@@ -234,9 +234,10 @@ class _LoginScreenState extends State<LoginScreen> {
           TextButton(
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: () {
-              setState(() {
-                Get.to(() => const VerifyPhoneScreen());
-              });
+              Navigator.pop(context);
+              // setState(() {
+              Get.to(() => const VerifyPhoneScreen());
+              // });
             },
             child: const Text(
               "Register Here ",

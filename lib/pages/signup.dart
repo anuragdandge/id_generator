@@ -431,13 +431,7 @@ class _SignupState extends State<Signup> {
             size: 60,
             color: Colors.deepPurple,
           ),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return _buildAlertDialog();
-                });
-          },
+          onPressed: _pickImageFromGallery,
         ),
       );
     }
@@ -521,46 +515,14 @@ class _SignupState extends State<Signup> {
             if (_formKey.currentState!.validate()) {
               _generateNewUuid();
               // await uploadImageToFirebaseStorage();
-              Reference storageReference =
-                  FirebaseStorage.instance.ref().child('studentsProfile/$uuid');
-              UploadTask uploadTask = storageReference.putFile(_selectedImage!);
+              // Reference storageReference =
+              //     FirebaseStorage.instance.ref().child('studentsProfile/$uuid');
+              // UploadTask uploadTask = storageReference.putFile(_selectedImage!);
 
-              // Wait for the upload to complete
-              await uploadTask.whenComplete(() => null);
+              // // Wait for the upload to complete
+              // await uploadTask.whenComplete(() => null);
 
-              // Get the download URL
-              String downloadURL = await storageReference.getDownloadURL();
-              CollectionReference collRef =
-                  FirebaseFirestore.instance.collection('students');
-              collRef.add(
-                {
-                  'fullname': fullNameController.text,
-                  'uuid': uuid,
-                  'profileUrl': downloadURL,
-                  'phonenumber': widget.phoneNo,
-                  'password': password.text,
-                  'emergencynumber': emergencyNumber.text,
-                  'division': _selectedDivision,
-                  'bloodgroup': _selectedBloodGroup,
-                  'class': _selectedClass,
-                  'gender': _selectedGender,
-                  'dateofbirth': dateOfBirth.text,
-                  'academicyear': academicYear.text,
-                  'localaddress': localAddress.text,
-                  'rollnumber': rollNumber.text,
-                  'verified': 'false',
-                  'registeredAt': DateTime.now(),
-                },
-              );
-              CollectionReference credRef =
-                  FirebaseFirestore.instance.collection('credentials');
-              credRef.add(
-                {
-                  'phonenumber': widget.phoneNo.substring(3),
-                  'password': password.text,
-                  'uuid': uuid,
-                },
-              );
+              // // Get the download URL
             }
             // _signup();
             final SharedPreferences prefs =
@@ -583,7 +545,7 @@ class _SignupState extends State<Signup> {
                           ],
                         )));
               } else {
-                // uploadImage();
+                uploadImage();
                 Navigator.pop(context);
                 Get.to(() => const StudentHome());
               }
@@ -752,9 +714,37 @@ class _SignupState extends State<Signup> {
       UploadTask uploadTask = firebaseStorage.putFile(_selectedImage!);
       await uploadTask.whenComplete(() => null);
       String downloadURL = await firebaseStorage.getDownloadURL();
-      setState(() {
-        imgUrl = downloadURL;
-      });
+      CollectionReference collRef =
+          FirebaseFirestore.instance.collection('students');
+      collRef.add(
+        {
+          'fullname': fullNameController.text,
+          'uuid': uuid,
+          'profileUrl': downloadURL,
+          'phonenumber': widget.phoneNo,
+          'password': password.text,
+          'emergencynumber': emergencyNumber.text,
+          'division': _selectedDivision,
+          'bloodgroup': _selectedBloodGroup,
+          'class': _selectedClass,
+          'gender': _selectedGender,
+          'dateofbirth': dateOfBirth.text,
+          'academicyear': academicYear.text,
+          'localaddress': localAddress.text,
+          'rollnumber': rollNumber.text,
+          'verified': 'false',
+          'registeredAt': DateTime.now(),
+        },
+      );
+      CollectionReference credRef =
+          FirebaseFirestore.instance.collection('credentials');
+      credRef.add(
+        {
+          'phonenumber': widget.phoneNo.substring(3),
+          'password': password.text,
+          'uuid': uuid,
+        },
+      );
     }
   }
 
