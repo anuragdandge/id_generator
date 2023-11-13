@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
-import 'package:id_generator/pages/admin/adminHome.dart';
+import 'package:id_generator/pages/admin/admin_home.dart';
+import 'package:id_generator/pages/student_home.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: phoneController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "9145369999",
+                            hintText: "9145360000",
                             label: Text(" Phone Number "),
                             prefixIcon: Icon(
                               Icons.phone,
@@ -196,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   await prefs.setBool('isLoggedIn', true);
                   debugPrint(" User Logged In !!!");
                   Navigator.pop(context);
-                  Get.to(() => const AdminHome());
+                  Get.to(() => const StudentHome());
                 }
               }
             } else {

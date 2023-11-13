@@ -144,16 +144,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 
-class StudentQR extends StatefulWidget {
-  const StudentQR({Key? key}) : super(key: key);
+class StudentProfile extends StatefulWidget {
+  const StudentProfile({Key? key}) : super(key: key);
 
   @override
-  State<StudentQR> createState() => _StudentQRState();
+  State<StudentProfile> createState() => _StudentProfileState();
 }
 
-class _StudentQRState extends State<StudentQR> {
+class _StudentProfileState extends State<StudentProfile> {
   // String imgUrl = '';
   @override
   void initState() {

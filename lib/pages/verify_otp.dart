@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/login.dart';
-import 'package:id_generator/pages/signup.dart';
+import 'package:id_generator/pages/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -92,7 +92,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
 
-                                  Get.to(() => Signup(
+                                  Get.to(() => Register(
                                         phoneNo: phone,
                                       ));
                                 }

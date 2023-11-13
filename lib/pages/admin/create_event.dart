@@ -5,14 +5,14 @@ import 'package:id_generator/pages/admin/viewEvents.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-class CreateEventScreen extends StatefulWidget {
-  const CreateEventScreen({super.key});
+class CreateEvent extends StatefulWidget {
+  const CreateEvent({super.key});
 
   @override
-  State<CreateEventScreen> createState() => _CreateEventScreenState();
+  State<CreateEvent> createState() => _CreateEventState();
 }
 
-class _CreateEventScreenState extends State<CreateEventScreen> {
+class _CreateEventState extends State<CreateEvent> {
   TextEditingController eventTitle = TextEditingController();
   TextEditingController eventDescription = TextEditingController();
   TextEditingController startDate = TextEditingController();
@@ -442,7 +442,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             });
             Navigator.pop(context);
             Get.to(
-              () => const ViewEventsScreen(),
+              () => const ViewEvents(),
             );
           }
         },

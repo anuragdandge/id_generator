@@ -16,11 +16,11 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key, required this.phoneNo});
+class Register extends StatefulWidget {
+  const Register({super.key, required this.phoneNo});
   final String phoneNo;
   @override
-  State<Signup> createState() => _SignupState();
+  State<Register> createState() => _RegisterState();
 }
 
 final List<String> bloodGroups = [
@@ -34,7 +34,7 @@ final List<String> bloodGroups = [
   'O-',
 ];
 
-class _SignupState extends State<Signup> {
+class _RegisterState extends State<Register> {
   late Size mediaSize;
   late Color myColor;
   // TextEditingController phoneController = TextEditingController();

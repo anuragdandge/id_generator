@@ -3,14 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:id_generator/pages/admin/viewAllStudents.dart';
+import 'package:id_generator/pages/admin/create_event.dart';
+import 'package:id_generator/pages/admin/view_students.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/admin/viewEvents.dart';
-import 'package:id_generator/pages/student_qr.dart';
+import 'package:id_generator/pages/student_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../animations/slideRight.dart';
-import 'createEventScreen.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -85,7 +85,7 @@ class _AdminHomeState extends State<AdminHome> {
                         ),
                         onPressed: () {
                           Navigator.push(context,
-                              SlideRightRoute(page: const CreateEventScreen()));
+                              SlideRightRoute(page: const CreateEvent()));
                         },
                         child: const Text(
                           " Create Event ",
@@ -136,7 +136,7 @@ class _AdminHomeState extends State<AdminHome> {
                         ),
                         onPressed: () {
                           Navigator.push(context,
-                              SlideRightRoute(page: const ViewEventsScreen()));
+                              SlideRightRoute(page: const ViewEvents()));
                         },
                         child: const Text(
                           " View Events  ",
@@ -192,7 +192,7 @@ class _AdminHomeState extends State<AdminHome> {
                           //     page: const ViewStudents(),
                           //   ),
                           // );
-                          Get.to(() => StudentQR());
+                          Get.to(() => const StudentProfile());
                         },
                         child: const Text(
                           " View Students  ",
