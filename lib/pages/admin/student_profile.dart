@@ -195,7 +195,7 @@ class _StudentProfileState extends State<StudentProfile> {
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.setBool('isLoggedIn', false);
-                debugPrint(" Logged Out ");
+                debugPrint(" Logged Out as User");
                 Navigator.pop(context);
                 Get.to(() => const LoginScreen());
               },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 
-class EventCardWidget extends StatelessWidget {
+class EventCardWidgetParticipant extends StatelessWidget {
   final String eventName;
   final String location;
   final String description;
@@ -12,7 +12,7 @@ class EventCardWidget extends StatelessWidget {
   final String endTime;
   final VoidCallback onRegister;
 
-  EventCardWidget({
+  EventCardWidgetParticipant({
     required this.eventName,
     required this.location,
     required this.description,

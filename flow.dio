@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="9gfhStkheucHAAu3ruJu" name="Page-1">
-        <mxGraphModel dx="2082" dy="719" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+        <mxGraphModel dx="1730" dy="185" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -274,6 +274,9 @@
                 </mxCell>
                 <mxCell id="133" value="/register" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="-355" y="1250" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="136" value="While Verifying the student we'll check the student is already &lt;br&gt;available in database which is already present with faculty&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="226" y="606" width="328" height="41" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

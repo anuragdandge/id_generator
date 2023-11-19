@@ -7,7 +7,7 @@ import 'package:id_generator/pages/admin/create_event.dart';
 import 'package:id_generator/pages/admin/view_students.dart';
 import 'package:id_generator/pages/login.dart';
 import 'package:id_generator/pages/admin/viewEvents.dart';
-import 'package:id_generator/pages/student_profile.dart';
+import 'package:id_generator/pages/admin/student_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../animations/slideRight.dart';
@@ -30,6 +30,8 @@ class _AdminHomeState extends State<AdminHome> {
             onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setBool('isLoggedIn', false);
+              prefs.remove('profile');
+              debugPrint(" logged out as Admin");
               Navigator.pop(context);
               Get.to(() => const LoginScreen());
             },

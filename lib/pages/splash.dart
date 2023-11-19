@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:id_generator/pages/admin/admin_home.dart';
 import 'package:id_generator/pages/login.dart';
-import 'package:id_generator/pages/student_home.dart';
+import 'package:id_generator/pages/participant/view_events.dart';
+import 'package:id_generator/pages/participant/student_home.dart';
+import 'package:id_generator/pages/admin/student_profile.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,12 +39,18 @@ class _SplashScreenState extends State<SplashScreen> {
   route() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    String? profile = prefs.getString('profile');
     print("Is User Already Logged in :  $isLoggedIn");
+    print("Logged in as :  $profile");
     Navigator.pop(context);
-    Get.to(() => isLoggedIn ? const AdminHome() : const LoginScreen());
+    Get.to(
+      () => isLoggedIn == false
+          ? const LoginScreen()
+          : profile == "admin"
+              ? const AdminHome()
+              : const StudentHome(),
+    );
   }
-
-  gotoHome() {}
 
   initScreen(BuildContext context) {
     return Scaffold(

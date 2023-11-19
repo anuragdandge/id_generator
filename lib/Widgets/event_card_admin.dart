@@ -12,7 +12,8 @@ class EventCardWidgetAdmin extends StatelessWidget {
   final String endTime;
   final VoidCallback onRegister;
 
-  EventCardWidgetAdmin({
+  const EventCardWidgetAdmin({
+    super.key,
     required this.eventName,
     required this.location,
     required this.description,
@@ -222,25 +223,49 @@ class EventCardWidgetAdmin extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: onRegister,
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(8),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.deepPurple[400],
-                borderRadius: BorderRadius.circular(8),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: onRegister,
+                child: Container(
+                  width: 120,
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple[400],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    "Delete",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-              child: const Text(
-                "Register",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500),
+              GestureDetector(
+                onTap: onRegister,
+                child: Container(
+                  width: 120,
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple[400],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    "Edit",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),

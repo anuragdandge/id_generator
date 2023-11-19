@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:id_generator/Widgets/event_card_participants.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Widgets/event_card_admin.dart';
 
 class ViewEvents extends StatefulWidget {
   const ViewEvents({super.key});
@@ -14,6 +17,7 @@ class _ViewEventsState extends State<ViewEvents> {
   void initState() {
     super.initState();
     _getEvents();
+    getPrefs();
   }
 
   final List<String> roles = [
@@ -22,19 +26,18 @@ class _ViewEventsState extends State<ViewEvents> {
     'Co-Ordinator',
     'Head Co-Ordinator',
   ];
-  String? _selectedRole;
+  // ignore: unused_field
+  String? _selectedRole = "Participant";
   late List<Map<String, dynamic>> events = [];
   bool isLoaded = false;
   bool isEditing = false;
+  String? uuid;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(" Events "),
-        actions: [
-          IconButton(onPressed: _getEvents, icon: const Icon(Icons.refresh))
-        ],
       ),
       body:
           // events.isEmpty
@@ -64,11 +67,87 @@ class _ViewEventsState extends State<ViewEvents> {
                         ],
                       ),
                     )
-                  : ListView.builder(
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        return Container();
-                      },
+                  : RefreshIndicator(
+                      onRefresh: _getEvents,
+                      child: ListView.builder(
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          return EventCardWidgetParticipant(
+                            eventName: events[index]['eventTitle'],
+                            location: events[index]['eventAddress'],
+                            description: events[index]['eventDescription'],
+                            startDate: events[index]['eventStartDate'],
+                            endDate: events[index]['eventEndDate'],
+                            startTime: events[index]['eventStartTime'],
+                            endTime: events[index]['eventEndTime'],
+                            onRegister: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(
+                                      "Registering for ${events[index]['eventTitle']} event "),
+                                  content: Form(
+                                    child: DropdownMenu<String>(
+                                      initialSelection: "Participant",
+                                      onSelected: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          _selectedRole = value!;
+                                        });
+                                      },
+                                      leadingIcon: const Icon(Icons.person),
+                                      label: const Text(" Select Role  "),
+                                      dropdownMenuEntries: roles
+                                          .map<DropdownMenuEntry<String>>(
+                                              (String value) {
+                                        return DropdownMenuEntry<String>(
+                                          value: value,
+                                          label: value,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text(" Close "),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        QuerySnapshot snapshot =
+                                            await FirebaseFirestore.instance
+                                                .collection('events')
+                                                .where('uuid',
+                                                    isEqualTo: events[index]
+                                                        ['uuid'])
+                                                .get();
+                                        var id = snapshot.docs[0].id;
+                                        CollectionReference collRef =
+                                            FirebaseFirestore.instance
+                                                .collection(
+                                                    'events/$id/participants');
+                                        collRef.add(
+                                          {'uuid': uuid, 'role': _selectedRole},
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.deepPurple[100])),
+                                      child: const Text(
+                                        " Register",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     )
               : const Center(
                   child: CircularProgressIndicator.adaptive(
@@ -76,6 +155,11 @@ class _ViewEventsState extends State<ViewEvents> {
                   ),
                 ),
     );
+  }
+
+  void getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    uuid = prefs.getString('uuid');
   }
 
   Future<void> _getEvents() async {
@@ -90,55 +174,5 @@ class _ViewEventsState extends State<ViewEvents> {
       events = tempList;
       isLoaded = true;
     });
-  }
-
-  void editEvent(String uuid, int index) {
-    debugPrint(uuid);
-    debugPrint("$index");
-    setState(() {});
-  }
-
-  void deleteEvent(int index) async {
-    debugPrint(" Deleting  Event .... ");
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Are you Sure ? "),
-              content: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel "),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      QuerySnapshot snapshot = await FirebaseFirestore.instance
-                          .collection('events')
-                          .where('uuid', isEqualTo: events[index]['uuid'])
-                          .get();
-                      var id = snapshot.docs[0].id;
-                      await FirebaseFirestore.instance
-                          .collection('events')
-                          .doc(id)
-                          .delete();
-                      Navigator.pop(context);
-                      debugPrint(" Event Deleted !!! ");
-                      _getEvents();
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.delete),
-                        Text("Delete "),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ));
   }
 }

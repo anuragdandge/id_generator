@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
 import 'package:id_generator/pages/admin/admin_home.dart';
-import 'package:id_generator/pages/student_home.dart';
+import 'package:id_generator/pages/participant/view_events.dart';
+import 'package:id_generator/pages/participant/student_home.dart';
+import 'package:id_generator/pages/admin/student_profile.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -119,13 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please Enter Password ';
-                          } else {
-                            bool result = validatePassword(value);
-                            if (result) {
-                              return null;
-                            } else {
-                              return " Password should contain Capital, small letter & Number & Special";
-                            }
                           }
                         },
                         keyboardType: TextInputType.visiblePassword,
@@ -181,30 +176,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (passwordController.text != password) {
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red[100],
-                      content: const Text(
-                        'Password Not matched ',
-                        style: TextStyle(color: Colors.black),
+                    const SnackBar(
+                      content: Text(
+                        'Password Not matched !',
                       ),
-                      duration: const Duration(
-                          seconds: 3), // Adjust the duration as needed
+                      duration: Duration(seconds: 3),
                     ),
                   );
                 } else {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
-                  await prefs.setBool('isLoggedIn', true);
-                  debugPrint(" User Logged In !!!");
-                  Navigator.pop(context);
-                  Get.to(() => const StudentHome());
+
+                  if (data['phonenumber'] == "9145369970" &&
+                      data['password'] == "As@1") {
+                    await prefs.setBool('isLoggedIn', true);
+                    await prefs.setString('profile', "admin");
+                    debugPrint(" Logged in As Admin ");
+                    Navigator.pop(context);
+                    Get.to(() => const AdminHome());
+                  } else {
+                    await prefs.setBool('isLoggedIn', true);
+                    await prefs.setString('profile', "user");
+                    await prefs.setString('uuid', data['uuid']);
+
+                    debugPrint(" Logged in As Student");
+                    Navigator.pop(context);
+                    Get.to(() => const StudentHome());
+                  }
                 }
               }
             } else {
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Phone Number does not exist '),
+                  content: Text('Phone Number does not exist !'),
                   duration:
                       Duration(seconds: 3), // Adjust the duration as needed
                 ),

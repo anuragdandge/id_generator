@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, use_build_context_synchronously, non_constant_identifier_names
 
-import 'package:id_generator/pages/student_home.dart';
+import 'package:id_generator/pages/participant/student_home.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -528,6 +528,7 @@ class _RegisterState extends State<Register> {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setBool('isLoggedIn', true);
+            await prefs.setString('profile', "user");
             await prefs.setString("uuid", uuid);
             await prefs.setString("phone", widget.phoneNo);
             await prefs.setString("name", fullNameController.text);
