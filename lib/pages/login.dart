@@ -206,12 +206,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               }
             } else {
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Phone Number does not exist !'),
-                  duration:
-                      Duration(seconds: 3), // Adjust the duration as needed
+                  duration: Duration(seconds: 3),
                 ),
               );
             }

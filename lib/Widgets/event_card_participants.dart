@@ -35,18 +35,18 @@ class EventCardWidgetParticipant extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: Image.asset(
-              'assets/images/abc.jpg',
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
+          // ClipRRect(
+          //   borderRadius: const BorderRadius.only(
+          //     topLeft: Radius.circular(10),
+          //     topRight: Radius.circular(10),
+          //   ),
+          //   child: Image.asset(
+          //     'assets/images/abc.jpg',
+          //     height: 180,
+          //     width: double.infinity,
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

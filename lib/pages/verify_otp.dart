@@ -39,6 +39,10 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   _verifyPhoneNumber(String phone) async {
+    setState(() {
+      isLoading =
+          true; // Set isLoading to true when verification process starts
+    });
     debugPrint(" Phone Number Entered  ");
     try {
       await _auth.verifyPhoneNumber(
@@ -60,49 +64,48 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             //       )
             //     : '
             showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => AlertDialog(
-                      title: const Text("Enter OTP"),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                              controller: _codeController,
-                              maxLength: 6,
-                              keyboardType: TextInputType.number)
-                        ],
-                      ),
-                      actions: [
-                        ElevatedButton(
-                            onPressed: () {
-                              debugPrint("OTP Entered !!!");
-                              FirebaseAuth auth = FirebaseAuth.instance;
-                              smsCode = _codeController.text;
-                              PhoneAuthCredential credential =
-                                  PhoneAuthProvider.credential(
-                                      verificationId: verificationId,
-                                      smsCode: smsCode);
-                              auth
-                                  .signInWithCredential(credential)
-                                  .then((value) {
-                                // ignore: unnecessary_null_comparison
-                                if (value != null) {
-                                  debugPrint("Verification Completed !!!");
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => AlertDialog(
+                title: const Text("Enter OTP"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                        controller: _codeController,
+                        maxLength: 6,
+                        keyboardType: TextInputType.number)
+                  ],
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      debugPrint("OTP Entered !!!");
+                      FirebaseAuth auth = FirebaseAuth.instance;
+                      smsCode = _codeController.text;
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                              verificationId: verificationId, smsCode: smsCode);
+                      auth.signInWithCredential(credential).then((value) {
+                        // ignore: unnecessary_null_comparison
+                        if (value != null) {
+                          debugPrint("Verification Completed !!!");
+                          Navigator.pop(context);
+                          Navigator.pop(context);
 
-                                  Get.to(() => Register(
-                                        phoneNo: phone,
-                                      ));
-                                }
-                              }).catchError((e) {
-                                print(e);
-                              });
-                            },
-                            child: const Text("Submit "))
-                      ],
-                    ));
+                          Get.to(() => Register(
+                                phoneNo: phone,
+                              ));
+                        }
+                      }).catchError((e) {
+                        print(e);
+                      });
+                    },
+                    child: const Text("Submit "),
+                  )
+                ],
+              ),
+            );
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             verificationId = verificationId;

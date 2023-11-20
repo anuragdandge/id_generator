@@ -10,7 +10,9 @@ class EventCardWidgetAdmin extends StatelessWidget {
   final String endDate;
   final String startTime;
   final String endTime;
-  final VoidCallback onRegister;
+  final VoidCallback onViewParticipants;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const EventCardWidgetAdmin({
     super.key,
@@ -21,7 +23,9 @@ class EventCardWidgetAdmin extends StatelessWidget {
     required this.endDate,
     required this.startTime,
     required this.endTime,
-    required this.onRegister,
+    required this.onViewParticipants,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -36,18 +40,18 @@ class EventCardWidgetAdmin extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: Image.asset(
-              'assets/images/abc.jpg',
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
+          // ClipRRect(
+          //   borderRadius: const BorderRadius.only(
+          //     topLeft: Radius.circular(10),
+          //     topRight: Radius.circular(10),
+          //   ),
+          //   child: Image.asset(
+          //     'assets/images/abc.jpg',
+          //     height: 180,
+          //     width: double.infinity,
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -224,47 +228,81 @@ class EventCardWidgetAdmin extends StatelessWidget {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                onTap: onRegister,
-                child: Container(
-                  width: 120,
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple[400],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    "Delete",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: onRegister,
-                child: Container(
-                  width: 120,
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple[400],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    "Edit",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500),
+              Expanded(
+                child: GestureDetector(
+                  onTap: onViewParticipants,
+                  child: Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple[400],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      "Participants",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ),
               ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit_calendar_outlined),
+                  ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete_outline_rounded),
+                  ),
+                ],
+              )
+              // GestureDetector(
+              //   onTap: onRegister,
+              //   child: Container(
+              //     width: 120,
+              //     margin: const EdgeInsets.all(16),
+              //     padding: const EdgeInsets.all(8),
+              //     decoration: BoxDecoration(
+              //       color: Colors.deepPurple[400],
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: const Text(
+              //       "Delete",
+              //       textAlign: TextAlign.center,
+              //       style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 25,
+              //           fontWeight: FontWeight.w500),
+              //     ),
+              //   ),
+              // ),
+              // GestureDetector(
+              //   onTap: onRegister,
+              //   child: Container(
+              //     width: 120,
+              //     margin: const EdgeInsets.all(16),
+              //     padding: const EdgeInsets.all(8),
+              //     decoration: BoxDecoration(
+              //       color: Colors.deepPurple[400],
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: const Text(
+              //       "Edit",
+              //       textAlign: TextAlign.center,
+              //       style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 25,
+              //           fontWeight: FontWeight.w500),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ],
