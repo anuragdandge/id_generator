@@ -536,15 +536,17 @@ class _RegisterState extends State<Register> {
               // Navigator.pop(context);
               if (_selectedImage == null) {
                 showDialog(
-                    context: context,
-                    builder: ((context) => AlertDialog(
-                          title: const Text("Select Profile Photo "),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text("Close"))
-                          ],
-                        )));
+                  context: context,
+                  builder: ((context) => AlertDialog(
+                        title: const Text("Select Profile Photo "),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Close"),
+                          )
+                        ],
+                      )),
+                );
               } else {
                 uploadImage();
                 Navigator.pop(context);
@@ -560,7 +562,7 @@ class _RegisterState extends State<Register> {
             shadowColor: Colors.deepPurple,
             minimumSize: const Size.fromHeight(60)),
         child: const Text(
-          "Signup",
+          "Register ",
           style: TextStyle(color: Colors.white),
         ));
   }
@@ -574,7 +576,7 @@ class _RegisterState extends State<Register> {
           ElevatedButton(
               style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
                   elevation: 0.0),
               onPressed: () {
                 setState(() {
@@ -595,7 +597,7 @@ class _RegisterState extends State<Register> {
       child: Wrap(spacing: 5.0, children: <Widget>[
         _buildChoiceChip_Class("FYMCA"),
         const SizedBox(width: 10),
-        _buildChoiceChip_Class("SYMCA")
+        _buildChoiceChip_Class("SYMCA"),
       ]),
     );
   }

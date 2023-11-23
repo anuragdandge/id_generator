@@ -182,6 +182,8 @@ class _StudentProfileState extends State<StudentProfile> {
     _getStudentData();
   }
 
+  bool verified = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -331,10 +333,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                                           ),
                                                         ),
                                                         IconButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
+                                                          onPressed: () {},
                                                           icon: const Icon(
                                                             Icons.more_vert,
                                                             color: Colors.white,
@@ -708,13 +707,43 @@ class _StudentProfileState extends State<StudentProfile> {
                                                         ),
                                                       ],
                                                     ),
-                                                    Text(
-                                                      students[index]
-                                                          ["verified"],
-                                                    ),
+                                                    // Text(
+                                                    //   students[index]
+                                                    //       ["verified"],
+                                                    // ),
                                                   ],
                                                 ),
-                                              )
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                // decoration: BoxDecoration(
+                                                //     color: Colors.amber[200]),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    const Text(
+                                                      "Mark as Verified  ",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 20),
+                                                    ),
+                                                    Switch(
+                                                      value: verified,
+                                                      onChanged: (bool value) {
+                                                        // This is called when the user toggles the switch.
+                                                        setState(() {
+                                                          verified = value;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         );

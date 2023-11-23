@@ -21,6 +21,7 @@ class _ViewEventsState extends State<ViewEvents> {
   }
 
   final List<String> roles = [
+    'Select',
     'Participant',
     'Volunteer',
     'Co-Ordinator',
@@ -88,7 +89,7 @@ class _ViewEventsState extends State<ViewEvents> {
                                       "Registering for ${events[index]['eventTitle']} event "),
                                   content: Form(
                                     child: DropdownMenu<String>(
-                                      initialSelection: "Participant",
+                                      initialSelection: "Select",
                                       onSelected: (String? value) {
                                         // This is called when the user selects an item.
                                         setState(() {
@@ -114,6 +115,7 @@ class _ViewEventsState extends State<ViewEvents> {
                                     ),
                                     ElevatedButton(
                                       onPressed: () async {
+                                        // Get
                                         QuerySnapshot snapshot =
                                             await FirebaseFirestore.instance
                                                 .collection('events')
@@ -121,14 +123,23 @@ class _ViewEventsState extends State<ViewEvents> {
                                                     isEqualTo: events[index]
                                                         ['uuid'])
                                                 .get();
-                                        var id = snapshot.docs[0].id;
+                                        var eventId = snapshot.docs[0].id;
                                         CollectionReference collRef =
-                                            FirebaseFirestore.instance
-                                                .collection(
-                                                    'events/$id/participants');
+                                            FirebaseFirestore.instance.collection(
+                                                'events/$eventId/participants');
                                         collRef.add(
                                           {'uuid': uuid, 'role': _selectedRole},
                                         );
+                                        QuerySnapshot snapshotS =
+                                            await FirebaseFirestore.instance
+                                                .collection('students')
+                                                .where('uuid', isEqualTo: uuid)
+                                                .get();
+                                        var studId = snapshotS.docs[0].id;
+                                        CollectionReference collRefStud =
+                                            FirebaseFirestore.instance.collection(
+                                                'students/$studId/registeredEvents');
+                                        collRefStud.add({'eventId': eventId});
                                         Navigator.pop(context);
                                       },
                                       style: ButtonStyle(
