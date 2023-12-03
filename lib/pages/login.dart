@@ -125,6 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         keyboardType: TextInputType.visiblePassword,
                         controller: passwordController,
+                        obscureText: true,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: "Abc#123",

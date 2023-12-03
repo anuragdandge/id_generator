@@ -124,6 +124,20 @@ class _ViewEventsState extends State<ViewEvents> {
                                                         ['uuid'])
                                                 .get();
                                         var eventId = snapshot.docs[0].id;
+                                        var eventTitle =
+                                            snapshot.docs[0]['eventTitle'];
+                                        var eventDescription = snapshot.docs[0]
+                                            ['eventDescription'];
+                                        var eventAddress =
+                                            snapshot.docs[0]['eventAddress'];
+                                        var eventStartTime =
+                                            snapshot.docs[0]['eventStartTime'];
+                                        var eventEndTime =
+                                            snapshot.docs[0]['eventEndTime'];
+                                        var eventStartDate =
+                                            snapshot.docs[0]['eventStartDate'];
+                                        var eventEndDate =
+                                            snapshot.docs[0]['eventEndDate'];
                                         CollectionReference collRef =
                                             FirebaseFirestore.instance.collection(
                                                 'events/$eventId/participants');
@@ -139,7 +153,20 @@ class _ViewEventsState extends State<ViewEvents> {
                                         CollectionReference collRefStud =
                                             FirebaseFirestore.instance.collection(
                                                 'students/$studId/registeredEvents');
-                                        collRefStud.add({'eventId': eventId});
+                                        collRefStud.add(
+                                          {
+                                            'eventId': eventId,
+                                            'eventTitle': eventTitle,
+                                            'eventDescription':
+                                                eventDescription,
+                                            'eventStartTime': eventStartTime,
+                                            'eventStartDate': eventStartDate,
+                                            'eventEndTime': eventEndTime,
+                                            'eventEndDate': eventEndDate,
+                                            'eventAddress': eventAddress,
+                                            'role': _selectedRole,
+                                          },
+                                        );
                                         Navigator.pop(context);
                                       },
                                       style: ButtonStyle(

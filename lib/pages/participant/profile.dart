@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/pages/login.dart';
+import 'package:id_generator/pages/participant/registered_events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
@@ -36,6 +37,7 @@ class _ProfileState extends State<Profile> {
   String localAddress = '';
   String rollNumber = '';
   late String verified = '';
+  late List<Map<String, dynamic>> detailedList = [];
 
   bool hide = false;
 
@@ -412,22 +414,34 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 8, bottom: 8),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.deepPurple[400],
-                    borderRadius: BorderRadius.circular(5)),
-                child: const Text(
-                  " Registered Events ",
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+              GestureDetector(
+                onTap: () => Get.to(() => const RegisteredEvents()),
+                child: Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 8, bottom: 8),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[400],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: const Text(
+                    " Registered Events ",
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
                 ),
               ),
+              // Expanded(
+              //   child: ListView.builder(
+              //       itemCount: detailedList.length,
+              //       itemBuilder: (context, index) {
+              //         return Container(
+              //           child: Text(detailedList[index]['eventTitle']),
+              //         );
+              //       }),
+              // ),
             ],
           ),
         ),
@@ -447,19 +461,21 @@ class _ProfileState extends State<Profile> {
     var data = await collection.get();
 
     late List<Map<String, dynamic>> tempList = [];
-    late List<Map<String, dynamic>> detailedList = [];
     // int iterator = 0;
     for (var element in data.docs) {
       tempList.add(element.data());
-      Map<String, dynamic> e = element.data();
-      DocumentSnapshot<Map<String, dynamic>> snapshotE = await FirebaseFirestore
-          .instance
-          .collection('events')
-          .doc(e['eventId'])
-          .get();
-      print(snapshotE['eventTitle']);
+      // Map<String, dynamic> e = element.data();
+      // DocumentSnapshot<Map<String, dynamic>> snapshotE = await FirebaseFirestore
+      //     .instance
+      //     .collection('events')
+      //     .doc(e['eventId'])
+      //     .get();
+      // print(snapshotE['eventTitle']);
       // iterator++;
     }
+    setState(() {
+      detailedList = tempList;
+    });
     // print(tempList[0]);
 
     // for (var i = 0; i < tempList.length; i++) {

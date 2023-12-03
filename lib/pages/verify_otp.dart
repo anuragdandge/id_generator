@@ -62,7 +62,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             //     ? const Center(
             //         child: CircularProgressIndicator(),
             //       )
-            //     : '
+            //     :
             showDialog(
               context: context,
               barrierDismissible: false,
