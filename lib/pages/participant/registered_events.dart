@@ -152,8 +152,8 @@ class _RegisteredEventsState extends State<RegisteredEvents> {
                                 ),
                                 child: Image.network(
                                   profileUrl,
-                                  width: 120,
-                                  height: 120,
+                                  width: 100,
+                                  height: 100,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -191,7 +191,7 @@ class _RegisteredEventsState extends State<RegisteredEvents> {
                             color: Colors.white),
                         child: QrImageView(
                           data: uuid + detailedList[index]['role'],
-                          size: 200,
+                          size: 140,
                         ),
                       ),
                     ],
