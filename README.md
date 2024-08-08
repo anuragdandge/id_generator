@@ -2,6 +2,22 @@
 
 This project is a Flutter-based Android application designed to streamline and enhance the management of college events. It provides a comprehensive platform for students and administrators to stay informed about upcoming events, register for participation, and manage event-related tasks efficiently.
 
+
+## Student/Participant
+
+| | | | |
+|-|-|-|-|
+|![Login Screen](readmeMedia/Login.png)|![Verify Phone Number ](readmeMedia/Verify_Phone_Number.png)|![Get OTP](readmeMedia/Get_OTP.png)|![Otp](readmeMedia/OTP.png)|
+|![Register Screen ](readmeMedia/Register_1.png)|![Register Screen](readmeMedia/Register_2.png)|![Student Home Screen](readmeMedia/Student_Home_Screen.png)|![Participant Profile ](readmeMedia/Participant_Profile.png)|
+|![](readmeMedia/Student_Card.png)|![](readmeMedia/View_Events_Student.png)|
+
+## Admin
+
+| | | | |
+|-|-|-|-|
+|![](readmeMedia/Admin_Dashboard.png)|![](readmeMedia/Create_Event.png)|![](readmeMedia/Create_Event_Date.png)|![](readmeMedia/Create_Event_Time.png)|
+|![](readmeMedia/Events_List.png)|![](readmeMedia/Participents_List.png)|![](readmeMedia/Student_Profile.png)| 
+
 ## Features
 
 **For Students:**
@@ -39,18 +55,3 @@ This project is a Flutter-based Android application designed to streamline and e
 - [x] Admin Home Screen
 - [x] Create Event Screen with Generating Event Functionality 
 - [x] View Event Screen with Fetching Event Functionality 
-
-## Student/Participant
-
-| | | | |
-|-|-|-|-|
-|![Login Screen](readmeMedia/Login.png)|![Verify Phone Number ](readmeMedia/Verify_Phone_Number.png)|![Get OTP](readmeMedia/Get_OTP.png)|![Otp](readmeMedia/OTP.png)|
-|![Register Screen ](readmeMedia/Register_1.png)|![Register Screen](readmeMedia/Register_2.png)|![Student Home Screen](readmeMedia/Student_Home_Screen.png)|![Participant Profile ](readmeMedia/Participant_Profile.png)|
-|![](readmeMedia/Student_Card.png)|![](readmeMedia/View_Events_Student.png)|
-
-## Admin
-
-| | | | |
-|-|-|-|-|
-|![](readmeMedia/Admin_Dashboard.png)|![](readmeMedia/Create_Event.png)|![](readmeMedia/Create_Event_Date.png)|![](readmeMedia/Create_Event_Time.png)|
-|![](readmeMedia/Events_List.png)|![](readmeMedia/Participents_List.png)|![](readmeMedia/Student_Profile.png)| 
