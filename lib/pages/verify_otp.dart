@@ -165,7 +165,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
               )),
           backgroundColor: Colors.deepPurple[400],
           title: const Text(
-            "Verify Phone Number",
+            "Register ",
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),

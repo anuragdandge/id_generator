@@ -122,7 +122,7 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         const SizedBox(
-                          width: 30,
+                          width: 20,
                         ),
                         Expanded(
                           child: Column(
@@ -139,7 +139,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   const SizedBox(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   verified == 'true'
                                       ? const Icon(
