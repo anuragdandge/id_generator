@@ -3,7 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_generator/animations/shake-widget.dart';
-import 'package:id_generator/pages/adminHome.dart';
+import 'package:id_generator/pages/admin/admin_home.dart';
+import 'package:id_generator/pages/participant/view_events.dart';
+import 'package:id_generator/pages/participant/student_home.dart';
+import 'package:id_generator/pages/admin/student_profile.dart';
 import 'package:id_generator/pages/verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: phoneController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "9145369999",
+                            hintText: "9145360000",
                             label: Text(" Phone Number "),
                             prefixIcon: Icon(
                               Icons.phone,
@@ -118,17 +121,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please Enter Password ';
-                          } else {
-                            bool result = validatePassword(value);
-                            if (result) {
-                              return null;
-                            } else {
-                              return " Password should contain Capital, small letter & Number & Special";
-                            }
                           }
                         },
                         keyboardType: TextInputType.visiblePassword,
                         controller: passwordController,
+                        obscureText: true,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: "Abc#123",
@@ -170,35 +167,50 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_formKey.currentState!.validate()) {
             final snapshot = await checkCredentials();
             if (snapshot.docs.isNotEmpty) {
+              debugPrint("Snapshot is Not Empty");
               for (QueryDocumentSnapshot document in snapshot.docs) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
+                print(" Snapshot $data");
                 String password = data['password'];
 
                 if (passwordController.text != password) {
                   // ignore: use_build_context_synchronously
-                  showDialog(
-                    context: context,
-                    builder: (context) => const AlertDialog(
-                      title: Text("Password Not Matched "),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Password Not matched !',
+                      ),
+                      duration: Duration(seconds: 3),
                     ),
                   );
                 } else {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
-                  await prefs.setBool('isLoggedIn', true);
-                  debugPrint(" User Logged In !!!");
-                  Navigator.pop(context);
-                  Get.to(() => const AdminHome());
+
+                  if (data['phonenumber'] == "9145369970" &&
+                      data['password'] == "As@1") {
+                    await prefs.setBool('isLoggedIn', true);
+                    await prefs.setString('profile', "admin");
+                    debugPrint(" Logged in As Admin ");
+                    Navigator.pop(context);
+                    Get.to(() => const AdminHome());
+                  } else {
+                    await prefs.setBool('isLoggedIn', true);
+                    await prefs.setString('profile', "user");
+                    await prefs.setString('uuid', data['uuid']);
+
+                    debugPrint(" Logged in As Student");
+                    Navigator.pop(context);
+                    Get.to(() => const StudentHome());
+                  }
                 }
               }
             } else {
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Phone Number does not exist '),
-                  duration:
-                      Duration(seconds: 2), // Adjust the duration as needed
+                  content: Text('Phone Number does not exist !'),
+                  duration: Duration(seconds: 3),
                 ),
               );
             }
@@ -227,9 +239,10 @@ class _LoginScreenState extends State<LoginScreen> {
           TextButton(
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: () {
-              setState(() {
-                Get.to(() => const VerifyPhoneScreen());
-              });
+              Navigator.pop(context);
+              // setState(() {
+              Get.to(() => const VerifyPhoneScreen());
+              // });
             },
             child: const Text(
               "Register Here ",
@@ -246,6 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .collection('credentials')
         .where('phonenumber', isEqualTo: phoneController.text)
         .get();
+    print("Check Credential();");
     return snapshot;
   }
 }
